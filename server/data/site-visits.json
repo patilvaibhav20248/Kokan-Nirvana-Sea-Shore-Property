@@ -1,0 +1,17 @@
+[
+  {
+    "id": "sv-1731946000000",
+    "name": "Amitabh Sengupta",
+    "email": "amitabh.s@example.com",
+    "phone": "+91 99201 98765",
+    "city": "Mumbai",
+    "preferredDate": "2026-11-28",
+    "pickupNeeded": "Yes, from Khed Railway Station",
+    "guestCount": 3,
+    "propertyId": "azure-coast-villas",
+    "propertyName": "The Azure Coast - Beachfront Signature Villas",
+    "notes": "Looking for ready possession sea-facing villa. Arriving by Vande Bharat express at Khed.",
+    "createdAt": "2026-11-18T11:15:00.000Z",
+    "status": "Confirmed"
+  }
+]

@@ -1,0 +1,27 @@
+[
+  {
+    "id": "inq-1795018621734",
+    "name": "Vikrant Sawant",
+    "email": "vikrant@example.com",
+    "phone": "+91 98200 99887",
+    "city": "Mumbai",
+    "interestedCategory": "Villa",
+    "budget": "₹2 Cr+",
+    "propertyTitle": "General",
+    "message": "",
+    "createdAt": "2026-11-18T16:17:01.734Z",
+    "status": "New Lead"
+  },
+  {
+    "id": "inq-1731945000000",
+    "name": "Pranav Joshi",
+    "email": "pranav.joshi@example.com",
+    "phone": "+91 98220 12345",
+    "city": "Pune",
+    "interestedCategory": "NA Plot",
+    "budget": "₹25 L - ₹50 L",
+    "message": "Interested in Sandalwood Palms Ladghar ridge plots. Please share RERA registration and 7/12 copy.",
+    "createdAt": "2026-11-18T10:30:00.000Z",
+    "status": "Contacted"
+  }
+]

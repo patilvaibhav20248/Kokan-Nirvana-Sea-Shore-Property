@@ -1,0 +1,22 @@
+[
+  { "id": "P-101", "name": "Plot 101", "size": "3,200 sq.ft", "facing": "West (Direct Sea View)", "price": "₹31.5 L", "status": "available", "type": "Sea-View Villa Plot", "zone": "Oceanfront Row A" },
+  { "id": "P-102", "name": "Plot 102", "size": "3,000 sq.ft", "facing": "West (Direct Sea View)", "price": "₹29.8 L", "status": "reserved", "type": "Sea-View Villa Plot", "zone": "Oceanfront Row A" },
+  { "id": "P-103", "name": "Plot 103", "size": "3,500 sq.ft", "facing": "North-West (Sea View)", "price": "₹34.5 L", "status": "available", "type": "Corner Premium Plot", "zone": "Oceanfront Row A" },
+  { "id": "P-104", "name": "Plot 104", "size": "2,800 sq.ft", "facing": "West (Direct Sea View)", "price": "₹27.5 L", "status": "sold", "type": "Sea-View Villa Plot", "zone": "Oceanfront Row A" },
+  { "id": "P-105", "name": "Plot 105", "size": "4,200 sq.ft", "facing": "South-West (Sea & Fort View)", "price": "₹41.0 L", "status": "available", "type": "Signature Estate Plot", "zone": "Oceanfront Row A" },
+  { "id": "P-106", "name": "Plot 106", "size": "3,000 sq.ft", "facing": "West (Sea Breeze)", "price": "₹29.5 L", "status": "sold", "type": "Sea-View Villa Plot", "zone": "Oceanfront Row A" },
+
+  { "id": "P-201", "name": "Plot 201", "size": "2,500 sq.ft", "facing": "North-West", "price": "₹24.5 L", "status": "available", "type": "Standard NA Plot", "zone": "Palm Boulevard Row B" },
+  { "id": "P-202", "name": "Plot 202", "size": "2,500 sq.ft", "facing": "North", "price": "₹24.5 L", "status": "sold", "type": "Standard NA Plot", "zone": "Palm Boulevard Row B" },
+  { "id": "P-203", "name": "Plot 203", "size": "2,750 sq.ft", "facing": "North-West", "price": "₹26.9 L", "status": "available", "type": "Garden View Plot", "zone": "Palm Boulevard Row B" },
+  { "id": "P-204", "name": "Plot 204", "size": "2,750 sq.ft", "facing": "North", "price": "₹26.9 L", "status": "reserved", "type": "Garden View Plot", "zone": "Palm Boulevard Row B" },
+  { "id": "P-205", "name": "Plot 205", "size": "3,100 sq.ft", "facing": "North-East", "price": "₹29.9 L", "status": "available", "type": "Clubhouse Proximity Plot", "zone": "Palm Boulevard Row B" },
+  { "id": "P-206", "name": "Plot 206", "size": "3,000 sq.ft", "facing": "North", "price": "₹28.8 L", "status": "available", "type": "Park View Plot", "zone": "Palm Boulevard Row B" },
+
+  { "id": "P-301", "name": "Plot 301", "size": "3,400 sq.ft", "facing": "East (Sunrise & Valley)", "price": "₹32.0 L", "status": "sold", "type": "Valley View Estate", "zone": "Hillcrest Ridge Row C" },
+  { "id": "P-302", "name": "Plot 302", "size": "3,200 sq.ft", "facing": "East (Valley View)", "price": "₹30.5 L", "status": "available", "type": "Valley View Estate", "zone": "Hillcrest Ridge Row C" },
+  { "id": "P-303", "name": "Plot 303", "size": "3,800 sq.ft", "facing": "East (Valley View)", "price": "₹36.0 L", "status": "available", "type": "Corner Mango Grove Plot", "zone": "Hillcrest Ridge Row C" },
+  { "id": "P-304", "name": "Plot 304", "size": "3,500 sq.ft", "facing": "South-East", "price": "₹33.5 L", "status": "reserved", "type": "Valley View Estate", "zone": "Hillcrest Ridge Row C" },
+  { "id": "P-305", "name": "Plot 305", "size": "4,500 sq.ft", "facing": "East & North", "price": "₹42.5 L", "status": "available", "type": "Grand Horizon Plot", "zone": "Hillcrest Ridge Row C" },
+  { "id": "P-306", "name": "Plot 306", "size": "3,600 sq.ft", "facing": "East", "price": "₹34.0 L", "status": "sold", "type": "Valley View Estate", "zone": "Hillcrest Ridge Row C" }
+]

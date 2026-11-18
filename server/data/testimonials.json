@@ -1,0 +1,29 @@
+[
+  {
+    "id": "t1",
+    "name": "Dr. Sameer & Neha Kulkarni",
+    "location": "Kothrud, Pune",
+    "propertyPurchased": "Plot 103, Sandalwood Palms, Ladghar",
+    "rating": 5,
+    "quote": "Finding clear-title land in Konkan used to be notoriously complicated. Kokan Nirvana was a breath of fresh air. They provided the 7/12 extract, Collector NA sanction orders, and demarcation within 48 hours. Our weekend villa is now complete, and our kids adore the dolphin safaris at Ladghar!",
+    "avatar": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80"
+  },
+  {
+    "id": "t2",
+    "name": "Rajesh & Ananya Mehta",
+    "location": "Bandra West, Mumbai",
+    "propertyPurchased": "The Azure Coast Villa, Murud",
+    "rating": 5,
+    "quote": "With the Ro-Ro ferry from Ferry Wharf and the 4-lane Mumbai-Goa expressway, we reach our sea villa in Dapoli in under 4 hours on Friday evening. The air quality (AQI < 20) and serenity here are priceless. It is truly our private slice of paradise.",
+    "avatar": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&q=80"
+  },
+  {
+    "id": "t3",
+    "name": "Capt. Vikram Deshmukh (Merchant Navy)",
+    "location": "Dubai / Thane",
+    "propertyPurchased": "Alphonso Greens 1-Acre Estate, Karde Valley",
+    "rating": 5,
+    "quote": "As an NRI, legal security was paramount. The Kokan Nirvana team handled complete documentation transparently. Last summer, our orchard yielded over 1,200 dozen Alphonso mangoes, and we built a cozy wooden cottage where our extended family reunites.",
+    "avatar": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=200&q=80"
+  }
+]
