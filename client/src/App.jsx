@@ -2,9 +2,12 @@ import React, { useState, useEffect } from 'react';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import BeachDestinationsStrip from './components/BeachDestinationsStrip';
+import VillaConfigurator from './components/VillaConfigurator';
 import PropertyList from './components/PropertyList';
 import PropertyDetailModal from './components/PropertyDetailModal';
 import MasterPlanExplorer from './components/MasterPlanExplorer';
+import DayInDapoli from './components/DayInDapoli';
+import LegalVerifier from './components/LegalVerifier';
 import WhyDapoliSection from './components/WhyDapoliSection';
 import InvestmentCalculator from './components/InvestmentCalculator';
 import TestimonialsSection from './components/TestimonialsSection';
@@ -134,7 +137,7 @@ export default function App() {
 
       {/* Main Content */}
       <main className="flex-1">
-        {/* Revamped High-Impact Split Hero Section */}
+        {/* Unique Bento Hero Section */}
         <Hero
           onOpenSiteVisit={() => handleOpenSiteVisit(null)}
           onOpenBrochure={() => setBrochureModalOpen(true)}
@@ -148,10 +151,15 @@ export default function App() {
           onSelectProperty={(prop) => setSelectedProperty(prop)}
         />
 
-        {/* Dapoli's 5 Iconic Shorelines Strip */}
+        {/* Dapoli's 5 Iconic Shorelines Discovery */}
         <BeachDestinationsStrip
           selectedLocation={selectedLocation}
           onSelectLocation={setSelectedLocation}
+        />
+
+        {/* Interactive Custom Villa & Plot Builder Configurator */}
+        <VillaConfigurator
+          onBookSiteVisit={handleOpenSiteVisit}
         />
 
         {/* Featured Property Catalog */}
@@ -168,6 +176,14 @@ export default function App() {
         <MasterPlanExplorer
           plots={plots}
           onReservePlot={handleReservePlot}
+          onOpenBrochure={() => setBrochureModalOpen(true)}
+        />
+
+        {/* 24-Hour Coastal Rhythm in Dapoli */}
+        <DayInDapoli />
+
+        {/* Digital 7/12 & NA Sanad Transparency Verifier */}
+        <LegalVerifier
           onOpenBrochure={() => setBrochureModalOpen(true)}
         />
 
