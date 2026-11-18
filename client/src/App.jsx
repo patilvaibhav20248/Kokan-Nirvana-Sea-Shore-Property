@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
+import BeachDestinationsStrip from './components/BeachDestinationsStrip';
 import PropertyList from './components/PropertyList';
 import PropertyDetailModal from './components/PropertyDetailModal';
 import MasterPlanExplorer from './components/MasterPlanExplorer';
@@ -14,7 +15,7 @@ import AdminPanelModal from './components/AdminPanelModal';
 import Footer from './components/Footer';
 
 import { initialProperties, initialPlots, initialTestimonials } from './data/fallbackData';
-import { MessageCircle, Calendar, PhoneCall, Sparkles } from 'lucide-react';
+import { MessageCircle, Calendar } from 'lucide-react';
 
 export default function App() {
   // Properties and Data states
@@ -124,7 +125,7 @@ export default function App() {
   return (
     <div className="min-h-screen bg-stone-50 text-stone-900 font-sans flex flex-col selection:bg-teal-700 selection:text-white">
       
-      {/* Navigation */}
+      {/* Top Header & Navigation */}
       <Navbar
         onOpenSiteVisit={() => handleOpenSiteVisit(null)}
         onOpenAdmin={() => setAdminModalOpen(true)}
@@ -133,7 +134,7 @@ export default function App() {
 
       {/* Main Content */}
       <main className="flex-1">
-        {/* Hero Section */}
+        {/* Revamped High-Impact Split Hero Section */}
         <Hero
           onOpenSiteVisit={() => handleOpenSiteVisit(null)}
           onOpenBrochure={() => setBrochureModalOpen(true)}
@@ -144,6 +145,13 @@ export default function App() {
           selectedBudget={selectedBudget}
           setSelectedBudget={setSelectedBudget}
           onApplySearch={handleApplySearch}
+          onSelectProperty={(prop) => setSelectedProperty(prop)}
+        />
+
+        {/* Dapoli's 5 Iconic Shorelines Strip */}
+        <BeachDestinationsStrip
+          selectedLocation={selectedLocation}
+          onSelectLocation={setSelectedLocation}
         />
 
         {/* Featured Property Catalog */}
@@ -190,7 +198,7 @@ export default function App() {
         onOpenAdmin={() => setAdminModalOpen(true)}
       />
 
-      {/* Floating Action Buttons (Mobile & Desktop) */}
+      {/* Floating Action Buttons */}
       <div className="fixed bottom-6 right-6 z-40 flex flex-col items-end gap-3 pointer-events-auto">
         <a
           href="https://wa.me/919820012345?text=Hello%20Kokan%20Nirvana%20team,%20I%20am%20interested%20in%20sea-facing%20plots%20in%20Dapoli"
