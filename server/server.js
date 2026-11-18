@@ -231,47 +231,15 @@ app.get('/api/weather', (req, res) => {
   });
 });
 
-// Investment ROI Calculator Endpoint
-app.post('/api/calculator/investment', (req, res) => {
-  const { propertyCost = 3000000, holdingYears = 5, downPaymentPercent = 20, loanInterestRate = 8.75 } = req.body;
-
-  const cost = Number(propertyCost);
-  const years = Number(holdingYears);
-  const dpPercent = Number(downPaymentPercent) / 100;
-  const interestRate = Number(loanInterestRate) / 100 / 12;
-
-  // Dapoli coastal land historic CAGR is ~13.5%
-  const annualGrowthRate = 0.135;
-  const projectedFutureValue = Math.round(cost * Math.pow(1 + annualGrowthRate, years));
-  const estimatedCapitalAppreciation = projectedFutureValue - cost;
-
-  // Weekend Vacation Rental Yield (avg 11% gross for furnished coastal cottages/villas)
-  const estimatedAnnualRental = Math.round(cost * 0.11);
-  const totalRentalEarned = estimatedAnnualRental * years;
-
-  // EMI Calculation
-  const loanAmount = cost * (1 - dpPercent);
-  const totalMonths = years * 12;
-  const monthlyEmi = Math.round(
-    loanAmount * interestRate * (Math.pow(1 + interestRate, totalMonths)) / (Math.pow(1 + interestRate, totalMonths) - 1)
-  );
-
-  res.json({
-    success: true,
-    data: {
-      cost,
-      downPayment: Math.round(cost * dpPercent),
-      loanAmount: Math.round(loanAmount),
-      monthlyEmi,
-      projectedFutureValue,
-      estimatedCapitalAppreciation,
-      estimatedAnnualRental,
-      totalRentalEarned,
-      totalProjectedReturn: estimatedCapitalAppreciation + totalRentalEarned,
-      annualCagr: '13.5%'
-    }
+// Serve frontend static build if available
+const clientDistPath = path.join(__dirname, '..', 'client', 'dist');
+if (fs.existsSync(clientDistPath)) {
+  app.use(express.static(clientDistPath));
+  app.get('*', (req, res, next) => {
+    if (req.path.startsWith('/api')) return next();
+    res.sendFile(path.join(clientDistPath, 'index.html'));
   });
-});
+}
 
 app.listen(PORT, () => {
   console.log(`🌊 Kokan Nirvana Server running on http://localhost:${PORT}`);
