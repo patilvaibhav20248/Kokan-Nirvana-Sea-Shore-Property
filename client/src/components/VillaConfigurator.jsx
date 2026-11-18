@@ -8,10 +8,10 @@ import {
   Check, 
   Sparkles, 
   Calculator, 
-  ArrowRight,
-  ShieldCheck,
-  Palmtree,
-  Calendar
+  ArrowRight, 
+  ShieldCheck, 
+  Palmtree, 
+  Calendar 
 } from 'lucide-react';
 
 export default function VillaConfigurator({ onBookSiteVisit }) {
@@ -93,7 +93,6 @@ export default function VillaConfigurator({ onBookSiteVisit }) {
 
   const grandTotal = (selectedPlot?.basePrice || 0) + (selectedArch?.cost || 0) + addonsTotal;
   
-  // Format Lakhs/Crores
   const formatCost = (num) => {
     if (num >= 10000000) return `₹${(num / 10000000).toFixed(2)} Cr`;
     return `₹${(num / 100000).toFixed(2)} Lakhs`;
@@ -103,7 +102,7 @@ export default function VillaConfigurator({ onBookSiteVisit }) {
   const estimatedMonthlyEmi = Math.round((grandTotal * 0.8 * (0.0875 / 12) * Math.pow(1 + 0.0875 / 12, 180)) / (Math.pow(1 + 0.0875 / 12, 180) - 1));
 
   return (
-    <section className="py-20 bg-stone-900 text-white relative overflow-hidden">
+    <section id="configurator" className="py-20 bg-stone-900 text-white relative overflow-hidden">
       
       {/* Subtle Glows */}
       <div className="absolute top-1/4 left-0 w-96 h-96 bg-teal-500/10 rounded-full blur-3xl pointer-events-none"></div>
@@ -115,14 +114,14 @@ export default function VillaConfigurator({ onBookSiteVisit }) {
         <div className="max-w-3xl mb-12">
           <div className="inline-flex items-center gap-2 text-xs font-bold text-amber-300 uppercase tracking-widest bg-amber-950/80 px-3.5 py-1 rounded-full mb-3 border border-amber-800">
             <Sparkles className="w-3.5 h-3.5 text-amber-400" />
-            <span>Interactive Project Innovation</span>
+            <span>Interactive Custom Home Studio</span>
           </div>
 
           <h2 className="font-serif-luxury text-3xl sm:text-4xl md:text-5xl font-bold text-white tracking-tight leading-tight">
             Design & Price Your Dream Coastal Retreat
           </h2>
           <p className="mt-3 text-stone-300 text-sm sm:text-base leading-relaxed">
-            Customize your plot, select vernacular or contemporary architecture, add luxury amenities, 
+            Customize your plot location, select vernacular or contemporary architecture, add luxury amenities, 
             and view real-time estimates for construction, monthly EMI, and vacation rental yields.
           </p>
         </div>

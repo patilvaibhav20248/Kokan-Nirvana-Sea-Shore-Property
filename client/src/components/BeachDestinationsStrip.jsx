@@ -46,27 +46,27 @@ export default function BeachDestinationsStrip({ selectedLocation, onSelectLocat
   ];
 
   return (
-    <section className="bg-stone-900 text-white py-12 border-y border-stone-800">
+    <section className="bg-white text-stone-900 py-16 border-b border-stone-200/80">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
-        <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">
           <div>
-            <div className="inline-flex items-center gap-1.5 text-[11px] font-bold text-amber-300 uppercase tracking-widest bg-amber-950/80 px-3 py-0.5 rounded-full mb-1 border border-amber-800/60">
-              <Compass className="w-3.5 h-3.5 text-amber-400" />
-              <span>Dapoli Coastal Beach Zones</span>
+            <div className="inline-flex items-center gap-1.5 text-xs font-bold text-teal-800 uppercase tracking-widest bg-teal-50 px-3 py-1 rounded-full mb-2 border border-teal-200">
+              <Compass className="w-3.5 h-3.5 text-teal-700" />
+              <span>Dapoli Coastal Beach Sectors</span>
             </div>
-            <h3 className="font-serif-luxury text-2xl sm:text-3xl font-bold text-white">
-              Explore By Dapoli's 5 Iconic Shorelines
+            <h3 className="font-serif-luxury text-2xl sm:text-3xl md:text-4xl font-bold text-stone-900">
+              Explore by Dapoli's 5 Iconic Shorelines
             </h3>
           </div>
 
-          <p className="text-xs text-stone-400 max-w-md">
-            Click on any beach to instantly filter available Collector NA plots, beachfront villas, and agro estates located in that sector.
+          <p className="text-xs sm:text-sm text-stone-500 max-w-md">
+            Click on any beach to view available Collector NA plots, beachfront villas, and agro estates located in that sector.
           </p>
         </div>
 
         {/* 5 Beach Cards Grid */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3.5 sm:gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
           {beaches.map((b) => {
             const isSelected = selectedLocation.toLowerCase() === b.id.toLowerCase();
             return (
@@ -77,29 +77,29 @@ export default function BeachDestinationsStrip({ selectedLocation, onSelectLocat
                   const el = document.getElementById('properties');
                   if (el) el.scrollIntoView({ behavior: 'smooth' });
                 }}
-                className={`group relative rounded-2xl overflow-hidden aspect-[4/5] cursor-pointer border transition-all duration-300 flex flex-col justify-between p-4 ${
+                className={`group relative rounded-3xl overflow-hidden aspect-[4/5] cursor-pointer border transition-all duration-300 flex flex-col justify-between p-4 ${
                   isSelected 
-                    ? 'border-amber-400 ring-2 ring-amber-400 shadow-xl scale-[1.03]' 
-                    : 'border-stone-800 hover:border-teal-400 hover:scale-[1.02]'
+                    ? 'border-teal-700 ring-2 ring-teal-700 shadow-xl scale-[1.03]' 
+                    : 'border-stone-200 hover:border-teal-600 hover:shadow-lg hover:scale-[1.02]'
                 }`}
               >
                 {/* Background Photo */}
                 <img 
                   src={b.image} 
                   alt={b.name} 
-                  className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 filter brightness-[0.65]"
+                  className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 filter brightness-[0.62]"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent"></div>
+                <div className="absolute inset-0 bg-gradient-to-t from-stone-950/90 via-black/40 to-transparent"></div>
 
                 {/* Top Badge */}
                 <div className="relative z-10">
-                  <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-black/60 text-teal-300 backdrop-blur-md border border-white/10">
+                  <span className="text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-black/60 text-teal-200 backdrop-blur-md border border-white/20">
                     {b.plotsAvailable}
                   </span>
                 </div>
 
                 {/* Bottom Content */}
-                <div className="relative z-10">
+                <div className="relative z-10 text-white">
                   <h4 className="font-serif-luxury text-lg font-bold text-white group-hover:text-amber-300 transition-colors leading-tight">
                     {b.name}
                   </h4>

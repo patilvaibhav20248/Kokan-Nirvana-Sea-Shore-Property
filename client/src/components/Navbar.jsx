@@ -11,9 +11,8 @@ import {
   Database, 
   MessageCircle, 
   ShieldCheck,
-  ChevronDown
+  ChevronRight
 } from 'lucide-react';
-import { isFirebaseInitialized, firebaseConfig } from '../firebase/config';
 
 export default function Navbar({ onOpenSiteVisit, onOpenAdmin, weatherData }) {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -29,92 +28,93 @@ export default function Navbar({ onOpenSiteVisit, onOpenAdmin, weatherData }) {
 
   return (
     <>
-      {/* Top Notification / Weather & Connectivity Bar */}
-      <div className="bg-teal-950 text-teal-100 text-xs py-2 px-4 border-b border-teal-900/60 hidden md:block">
+      {/* Top Ambient Bar */}
+      <div className="bg-stone-900 text-stone-300 text-xs py-2 px-4 border-b border-stone-800 hidden md:block">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex items-center space-x-6">
-            <span className="flex items-center gap-1.5 text-teal-200">
+            <span className="flex items-center gap-1.5 text-stone-200 font-medium">
               <MapPin className="w-3.5 h-3.5 text-amber-400" />
               <span>Dapoli, Ratnagiri Coast, Maharashtra</span>
             </span>
-            <span className="text-teal-400/50">|</span>
-            <span className="flex items-center gap-1.5">
+            <span className="text-stone-700">|</span>
+            <span className="flex items-center gap-1.5 text-stone-300">
               <Sun className="w-3.5 h-3.5 text-amber-400" />
-              <span>{weatherData ? `${weatherData.temperature} • ${weatherData.condition} (AQI ${weatherData.aqi})` : '26°C • Sunny Coastal Breeze (AQI 18)'}</span>
+              <span>{weatherData ? `${weatherData.temperature} • ${weatherData.condition} (AQI ${weatherData.aqi})` : '26°C • Sunny Sea Breeze (AQI 18)'}</span>
             </span>
-            <span className="text-teal-400/50">|</span>
-            <span className="text-teal-300">
-              ⚡ 4 Hrs from Mumbai (Ro-Ro / NH-66) & 3.5 Hrs from Pune
+            <span className="text-stone-700">|</span>
+            <span className="text-teal-300 font-medium">
+              ⚡ 4 Hrs from Mumbai (Ro-Ro / NH-66) • 3.5 Hrs from Pune
             </span>
           </div>
 
           <div className="flex items-center space-x-4">
-            <span className="flex items-center gap-1 text-emerald-300 font-medium">
-              <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
-              100% Clear Title • Collector NA Sanctioned
+            <span className="flex items-center gap-1 text-emerald-400 font-semibold text-[11px]">
+              <ShieldCheck className="w-3.5 h-3.5" />
+              100% Collector NA Sanad • Individual 7/12 Titles
             </span>
-            <span className="text-teal-400/50">|</span>
+            <span className="text-stone-700">|</span>
             <button
               onClick={onOpenAdmin}
-              className="flex items-center gap-1 text-teal-300 hover:text-white transition-colors cursor-pointer"
+              className="flex items-center gap-1.5 text-stone-300 hover:text-white transition-colors cursor-pointer text-[11px] font-medium"
               title="View Leads & Firebase Backend Status"
             >
               <Database className="w-3 h-3 text-cyan-400" />
-              <span>Backend & Leads</span>
+              <span>Backend Desk</span>
               <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
             </button>
           </div>
         </div>
       </div>
 
-      {/* Main Glass Header */}
+      {/* Main Glass Navbar */}
       <header className={`sticky top-0 z-40 transition-all duration-300 ${
         isScrolled 
-          ? 'glass-nav shadow-lg border-b border-stone-200/80 py-3' 
-          : 'bg-white/95 backdrop-blur-md border-b border-stone-100 py-4'
+          ? 'glass-panel shadow-md py-3.5 border-b border-stone-200/80' 
+          : 'bg-white/95 backdrop-blur-md py-4 border-b border-stone-200/60'
       }`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
           
           {/* Brand Logo */}
           <a href="#" className="flex items-center gap-3 group">
-            <div className="w-11 h-11 rounded-xl bg-gradient-to-tr from-teal-700 via-teal-600 to-emerald-500 flex items-center justify-center text-white shadow-md shadow-teal-900/10 group-hover:scale-105 transition-transform">
-              <Waves className="w-6 h-6 text-teal-100" />
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-cyan-900 via-teal-800 to-emerald-700 flex items-center justify-center text-white shadow-md shadow-teal-900/10 group-hover:scale-105 transition-transform">
+              <Waves className="w-5 h-5 text-teal-100" />
             </div>
             <div>
-              <div className="flex items-center gap-1.5">
+              <div className="flex items-center gap-2">
                 <span className="font-serif-luxury text-xl sm:text-2xl font-bold tracking-tight text-stone-900">
                   Kokan Nirvana
                 </span>
-                <span className="text-[10px] uppercase font-bold tracking-widest px-1.5 py-0.5 rounded bg-amber-100 text-amber-800 border border-amber-300/60 hidden sm:inline-block">
+                <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full bg-teal-50 text-teal-800 border border-teal-200 hidden sm:inline-block">
                   Sea Shore
                 </span>
               </div>
-              <p className="text-[11px] uppercase tracking-wider text-teal-800 font-semibold">
-                Dapoli • Maharashtra
+              <p className="text-[11px] uppercase tracking-widest text-stone-500 font-semibold">
+                Dapoli, Maharashtra
               </p>
             </div>
           </a>
 
           {/* Desktop Navigation Links */}
-          <nav className="hidden lg:flex items-center space-x-7 text-sm font-medium text-stone-700">
-            <a href="#properties" className="hover:text-teal-700 transition-colors">Properties</a>
-            <a href="#master-plan" className="hover:text-teal-700 transition-colors flex items-center gap-1">
-              <span>Master Plan</span>
-              <span className="px-1.5 py-0.2 rounded text-[10px] bg-emerald-100 text-emerald-800 font-bold">Interactive</span>
+          <nav className="hidden lg:flex items-center space-x-7 text-xs font-bold text-stone-700 uppercase tracking-wider">
+            <a href="#properties" className="hover:text-teal-800 transition-colors">Properties</a>
+            <a href="#configurator" className="hover:text-teal-800 transition-colors flex items-center gap-1">
+              <span>Villa Builder</span>
+              <span className="px-1.5 py-0.2 rounded text-[9px] bg-amber-100 text-amber-800 font-extrabold lowercase">new</span>
             </a>
-            <a href="#why-dapoli" className="hover:text-teal-700 transition-colors">Why Dapoli</a>
-            <a href="#investment-roi" className="hover:text-teal-700 transition-colors">ROI Calculator</a>
-            <a href="#testimonials" className="hover:text-teal-700 transition-colors">Reviews</a>
-            <a href="#contact" className="hover:text-teal-700 transition-colors">Contact</a>
+            <a href="#master-plan" className="hover:text-teal-800 transition-colors">Master Plan</a>
+            <a href="#day-in-dapoli" className="hover:text-teal-800 transition-colors">24h Lifestyle</a>
+            <a href="#legal-verifier" className="hover:text-teal-800 transition-colors">7/12 Verifier</a>
+            <a href="#investment-roi" className="hover:text-teal-800 transition-colors">ROI Calculator</a>
+            <a href="#contact" className="hover:text-teal-800 transition-colors">Contact</a>
           </nav>
 
-          {/* Action CTAs */}
+          {/* Action Buttons */}
           <div className="hidden sm:flex items-center gap-3">
             <a
-              href="https://wa.me/919820012345?text=Hi%20Kokan%20Nirvana%20team,%20I%20am%20interested%20in%20sea-facing%20plots%20and%20villas%20in%20Dapoli"
+              href="https://wa.me/919820012345?text=Hello%20Kokan%20Nirvana%20team,%20I%20am%20interested%20in%20sea-facing%20plots%20in%20Dapoli"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs font-semibold text-emerald-800 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 transition-colors"
+              className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold text-emerald-800 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 transition-colors"
             >
               <MessageCircle className="w-4 h-4 text-emerald-600" />
               <span>WhatsApp</span>
@@ -122,9 +122,9 @@ export default function Navbar({ onOpenSiteVisit, onOpenAdmin, weatherData }) {
 
             <button
               onClick={onOpenSiteVisit}
-              className="flex items-center gap-2 px-4 py-2.5 rounded-lg text-xs font-bold text-white bg-gradient-to-r from-teal-700 to-emerald-700 hover:from-teal-800 hover:to-emerald-800 shadow-md shadow-teal-900/15 hover:shadow-lg transition-all cursor-pointer"
+              className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold text-white bg-stone-900 hover:bg-stone-800 shadow-md shadow-stone-950/15 transition-all cursor-pointer"
             >
-              <Calendar className="w-4 h-4" />
+              <Calendar className="w-4 h-4 text-amber-300" />
               <span>Book VIP Site Visit</span>
             </button>
           </div>
@@ -132,67 +132,66 @@ export default function Navbar({ onOpenSiteVisit, onOpenAdmin, weatherData }) {
           {/* Mobile Menu Button */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="lg:hidden p-2 text-stone-700 hover:text-teal-700"
+            className="lg:hidden p-2 text-stone-700 hover:text-teal-800"
             aria-label="Toggle Menu"
           >
             {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
           </button>
         </div>
 
-        {/* Mobile Navigation Drawer */}
+        {/* Mobile Dropdown Menu */}
         {mobileMenuOpen && (
-          <div className="lg:hidden border-t border-stone-200 bg-white px-4 pt-3 pb-6 space-y-3 shadow-xl">
-            <div className="bg-teal-50 rounded-lg p-3 text-xs text-teal-900 flex items-center justify-between mb-2">
-              <span className="flex items-center gap-1 font-medium">
-                <Sun className="w-4 h-4 text-amber-500" />
-                Dapoli: 26°C Sunny Sea Breeze
-              </span>
-              <span className="text-[11px] text-teal-700 font-semibold">AQI 18</span>
-            </div>
-
-            <nav className="flex flex-col space-y-2 text-sm font-medium text-stone-800">
+          <div className="lg:hidden border-t border-stone-200 bg-white px-4 pt-3 pb-6 space-y-2 shadow-xl">
+            <nav className="flex flex-col space-y-1 text-sm font-semibold text-stone-800">
               <a 
                 href="#properties" 
                 onClick={() => setMobileMenuOpen(false)}
-                className="py-2 px-3 rounded-md hover:bg-stone-100"
+                className="py-2 px-3 rounded-lg hover:bg-stone-50"
               >
-                Featured Properties
+                Featured Properties & Plots
+              </a>
+              <a 
+                href="#configurator" 
+                onClick={() => setMobileMenuOpen(false)}
+                className="py-2 px-3 rounded-lg hover:bg-stone-50 flex items-center justify-between"
+              >
+                <span>Custom Villa Builder</span>
+                <span className="px-2 py-0.5 text-[10px] bg-amber-100 text-amber-800 rounded-full font-bold">Interactive</span>
               </a>
               <a 
                 href="#master-plan" 
                 onClick={() => setMobileMenuOpen(false)}
-                className="py-2 px-3 rounded-md hover:bg-stone-100 flex items-center justify-between"
+                className="py-2 px-3 rounded-lg hover:bg-stone-50"
               >
-                <span>Interactive Master Plan</span>
-                <span className="px-1.5 py-0.5 text-[10px] bg-emerald-100 text-emerald-800 rounded font-bold">New</span>
+                Interactive Master Plan
               </a>
               <a 
-                href="#why-dapoli" 
+                href="#day-in-dapoli" 
                 onClick={() => setMobileMenuOpen(false)}
-                className="py-2 px-3 rounded-md hover:bg-stone-100"
+                className="py-2 px-3 rounded-lg hover:bg-stone-50"
               >
-                Why Invest in Dapoli
+                24-Hour Coastal Lifestyle
+              </a>
+              <a 
+                href="#legal-verifier" 
+                onClick={() => setMobileMenuOpen(false)}
+                className="py-2 px-3 rounded-lg hover:bg-stone-50"
+              >
+                7/12 & NA Title Verifier
               </a>
               <a 
                 href="#investment-roi" 
                 onClick={() => setMobileMenuOpen(false)}
-                className="py-2 px-3 rounded-md hover:bg-stone-100"
+                className="py-2 px-3 rounded-lg hover:bg-stone-50"
               >
-                ROI & EMI Calculator
-              </a>
-              <a 
-                href="#testimonials" 
-                onClick={() => setMobileMenuOpen(false)}
-                className="py-2 px-3 rounded-md hover:bg-stone-100"
-              >
-                Buyer Reviews
+                Investment & EMI Calculator
               </a>
               <a 
                 href="#contact" 
                 onClick={() => setMobileMenuOpen(false)}
-                className="py-2 px-3 rounded-md hover:bg-stone-100"
+                className="py-2 px-3 rounded-lg hover:bg-stone-50"
               >
-                Contact & Sales Desk
+                Sales Office & Site Directions
               </a>
             </nav>
 
@@ -202,10 +201,10 @@ export default function Navbar({ onOpenSiteVisit, onOpenAdmin, weatherData }) {
                   setMobileMenuOpen(false);
                   onOpenSiteVisit();
                 }}
-                className="w-full flex items-center justify-center gap-2 py-2.5 rounded-lg text-sm font-bold text-white bg-gradient-to-r from-teal-700 to-emerald-700"
+                className="w-full flex items-center justify-center gap-2 py-3 rounded-xl text-xs font-bold text-white bg-stone-900"
               >
-                <Calendar className="w-4 h-4" />
-                Book VIP Site Visit
+                <Calendar className="w-4 h-4 text-amber-300" />
+                Book VIP Site Visit (Free Tour)
               </button>
 
               <button
@@ -213,10 +212,10 @@ export default function Navbar({ onOpenSiteVisit, onOpenAdmin, weatherData }) {
                   setMobileMenuOpen(false);
                   onOpenAdmin();
                 }}
-                className="w-full flex items-center justify-center gap-2 py-2 rounded-lg text-xs font-semibold text-stone-700 bg-stone-100 border border-stone-200"
+                className="w-full flex items-center justify-center gap-2 py-2 rounded-xl text-xs font-semibold text-stone-700 bg-stone-100 border border-stone-200"
               >
-                <Database className="w-3.5 h-3.5 text-teal-600" />
-                View Leads & Backend Status
+                <Database className="w-3.5 h-3.5 text-cyan-600" />
+                Backend Management & Leads
               </button>
             </div>
           </div>

@@ -15,7 +15,8 @@ import {
   ChevronRight,
   Sun,
   Wind,
-  PhoneCall
+  PhoneCall,
+  SlidersHorizontal
 } from 'lucide-react';
 
 export default function Hero({ 
@@ -30,16 +31,15 @@ export default function Hero({
   onApplySearch,
   onSelectProperty
 }) {
-  // 4 Coastal Perspectives for dynamic interactive hero
   const perspectives = [
     {
       id: 'Villa',
-      tabLabel: '🌊 Beachfront Villas',
+      tabLabel: 'Beachfront Villas',
       title: 'The Azure Coast Signature Villas',
       location: 'Murud Beachfront, Dapoli',
       price: '₹2.15 Cr',
       beachDistance: 'Direct Sand Access (60m)',
-      tagline: 'Private infinity plunge pools facing the Arabian Sea with sunset decks',
+      tagline: 'Private infinity plunge pool facing the Arabian Sea with panoramic sunset decks',
       badge: 'Ultra Luxury Beachfront',
       image: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1600&q=85',
       fsi: 'Sanctioned 1.0 FSI',
@@ -47,12 +47,12 @@ export default function Hero({
     },
     {
       id: 'NA Plot',
-      tabLabel: '🏖️ Collector NA Plots',
+      tabLabel: 'Collector NA Plots',
       title: 'Sandalwood Palms Coastal NA Plots',
       location: 'Ladghar (Red Pebble Beach) Ridge',
       price: 'Starting ₹24.5 Lakhs',
       beachDistance: '400m to Ladghar Beach',
-      tagline: 'Collector Sanad NA plots with individual 7/12 extract & 30-ft tar roads',
+      tagline: 'Sanctioned Collector NA plots with separate 7/12 extract & 30-ft tar roads',
       badge: 'Best Investment Hotspot',
       image: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1600&q=85',
       fsi: 'Separate 7/12 Extract',
@@ -60,12 +60,12 @@ export default function Hero({
     },
     {
       id: 'Farmhouse',
-      tabLabel: '🥭 Mango Agro Estates',
+      tabLabel: 'Mango Agro Estates',
       title: 'Alphonso Greens 1-Acre Estates',
       location: 'Karde Valley Hills, Dapoli',
       price: '₹48.0 Lakhs / Acre',
       beachDistance: '1.8 km to Karde White Sands',
-      tagline: '40+ yielding mature GI-tagged Alphonso mango trees & private cottage zoning',
+      tagline: '40+ mature GI-tagged Alphonso mango trees with farm cottage permissions',
       badge: 'GI-Tagged Agro Estate',
       image: 'https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=1600&q=85',
       fsi: 'Gated 1-Acre Parcels',
@@ -73,7 +73,7 @@ export default function Hero({
     },
     {
       id: 'Cottage',
-      tabLabel: '🏡 Oceanview Cottages',
+      tabLabel: 'Oceanview Cottages',
       title: 'Coral Horizon Boutique Cottages',
       location: 'Karde Beach Heights, Dapoli',
       price: '₹78.0 Lakhs',
@@ -95,214 +95,182 @@ export default function Hero({
   };
 
   return (
-    <section className="relative overflow-hidden bg-stone-950 text-white min-h-[92vh] flex flex-col justify-between pt-6 pb-10">
+    <section className="relative overflow-hidden bg-[#fbfbf9] text-stone-900 pt-8 pb-16 border-b border-stone-200/80">
       
-      {/* Dynamic Background Image with Smooth Crossfade */}
-      <div className="absolute inset-0 z-0 overflow-hidden">
-        <img 
-          key={activePersp.image}
-          src={activePersp.image} 
-          alt={activePersp.title} 
-          className="w-full h-full object-cover object-center filter brightness-[0.52] scale-105 transition-all duration-1000 ease-out"
-        />
-        {/* Layered Luxury Gradients */}
-        <div className="absolute inset-0 bg-gradient-to-t from-stone-950 via-stone-950/70 to-stone-900/40"></div>
-        <div className="absolute inset-0 bg-gradient-to-r from-stone-950 via-stone-950/80 to-transparent"></div>
-        <div className="absolute inset-0 bg-radial from-teal-900/30 via-transparent to-stone-950/90 pointer-events-none"></div>
-      </div>
+      {/* Delicate background ambient gradients */}
+      <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-gradient-to-bl from-teal-100/40 via-amber-100/30 to-transparent rounded-full blur-3xl pointer-events-none"></div>
+      <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-gradient-to-tr from-cyan-100/30 via-emerald-100/20 to-transparent rounded-full blur-3xl pointer-events-none"></div>
 
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
-        {/* Interactive Experience Perspective Switcher (Top of Hero) */}
-        <div className="pt-2 sm:pt-4 mb-8">
-          <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none">
-            <span className="text-[11px] font-bold text-teal-300 uppercase tracking-widest hidden md:inline-block mr-2 shrink-0">
-              Explore Living Styles:
-            </span>
+        {/* Top Tag & Perspective Switcher */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-10 pb-4 border-b border-stone-200/60">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-stone-100 border border-stone-300 text-stone-700 text-xs font-semibold">
+            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+            <span>RERA Registered & Collector Sanad NA Approved</span>
+            <span className="text-stone-400">•</span>
+            <span className="text-teal-800 font-bold">Dapoli, Ratnagiri</span>
+          </div>
+
+          {/* Living Style Selector Pills */}
+          <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none">
             {perspectives.map((p, idx) => (
               <button
                 key={p.id}
                 onClick={() => handlePerspectiveClick(idx, p.id)}
-                className={`px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap transition-all duration-300 cursor-pointer flex items-center gap-1.5 ${
+                className={`px-3.5 py-1.5 rounded-full text-xs font-bold whitespace-nowrap transition-all duration-200 cursor-pointer ${
                   activePerspectiveIndex === idx
-                    ? 'bg-gradient-to-r from-amber-400 to-yellow-400 text-stone-950 shadow-lg shadow-amber-400/20 scale-105 ring-2 ring-amber-300/60'
-                    : 'bg-white/10 hover:bg-white/20 text-stone-200 backdrop-blur-md border border-white/15'
+                    ? 'bg-stone-900 text-white shadow-md shadow-stone-900/10 scale-105'
+                    : 'bg-white text-stone-600 hover:text-stone-900 border border-stone-200 hover:bg-stone-50'
                 }`}
               >
-                <span>{p.tabLabel}</span>
-                {activePerspectiveIndex === idx && (
-                  <span className="w-1.5 h-1.5 rounded-full bg-stone-950"></span>
-                )}
+                {p.tabLabel}
               </button>
             ))}
           </div>
         </div>
 
-        {/* Split Asymmetric Hero Content */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center mb-10">
+        {/* Split Gallery Showcase Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center mb-12">
           
-          {/* Left Column: Headline, Brand Story, CTAs (7 Cols) */}
-          <div className="lg:col-span-7">
+          {/* Left Column: Brand Story & Emotional Statement (7 Cols) */}
+          <div className="lg:col-span-7 space-y-6">
             
-            {/* Trust Pill */}
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-teal-500/40 text-teal-200 text-xs sm:text-sm font-medium mb-4 shadow-xl">
-              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-              <span className="font-semibold text-white">Collector NA Sanctioned</span>
-              <span className="text-teal-400/60">•</span>
-              <span className="text-amber-300 font-medium">Individual 7/12 Titles in Dapoli</span>
+            <div>
+              <p className="font-editorial italic text-2xl sm:text-3xl md:text-4xl text-teal-800 font-normal mb-2 tracking-wide">
+                “Your dream of owning a piece of paradise in Dapoli.”
+              </p>
+
+              <h1 className="font-serif-luxury text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight text-stone-900 leading-[1.14]">
+                Where Pure Sea Air Meets <br />
+                <span className="bg-gradient-to-r from-teal-800 via-emerald-700 to-amber-700 bg-clip-text text-transparent">
+                  Timeless Coastal Luxury
+                </span>
+              </h1>
             </div>
 
-            {/* Core Emotional Tagline */}
-            <p className="font-editorial italic text-2xl sm:text-3xl md:text-4xl text-amber-200 font-normal mb-3 tracking-wide drop-shadow-md">
-              “Your dream of owning a piece of paradise in Dapoli.”
+            <p className="text-stone-600 text-base sm:text-lg leading-relaxed max-w-xl font-normal">
+              Escape to the "Mini Mahabaleshwar of Konkan". Own Collector NA sanctioned sea-facing plots, 
+              private pool beachfront villas, and mature Alphonso mango agro estates in Dapoli, Maharashtra. 
+              Enjoy 100% clear 7/12 land titles with 4-hour expressway access from Mumbai and Pune.
             </p>
 
-            {/* Main Punchy Heading */}
-            <h1 className="font-serif-luxury text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight text-white leading-[1.12] mb-6">
-              Bespoke Coastal Living on the <br />
-              <span className="bg-gradient-to-r from-teal-200 via-emerald-300 to-amber-200 bg-clip-text text-transparent">
-                Pristine Dapoli Sea Shore
-              </span>
-            </h1>
+            {/* Micro Highlights Badges */}
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 py-2">
+              <div className="bg-white p-3 rounded-2xl border border-stone-200/90 shadow-sm">
+                <span className="text-[10px] text-stone-400 uppercase font-bold block">Connectivity</span>
+                <span className="text-xs font-bold text-stone-900">3.5 - 4 Hrs</span>
+                <span className="text-[10px] text-teal-700 block">Mumbai / Pune</span>
+              </div>
 
-            <p className="text-stone-300 text-sm sm:text-base md:text-lg font-light leading-relaxed max-w-xl mb-8">
-              Wake up to Arabian Sea waves, golden sunsets, and pure coastal breezes (AQI &lt; 20). 
-              Gated Collector NA plots, beachfront villas, and Alphonso mango agro estates — 
-              just <strong className="text-white font-semibold">4 hours from Mumbai & 3.5 hours from Pune</strong> via the 4-lane expressway & Ro-Ro ferry.
-            </p>
+              <div className="bg-white p-3 rounded-2xl border border-stone-200/90 shadow-sm">
+                <span className="text-[10px] text-stone-400 uppercase font-bold block">Legal Status</span>
+                <span className="text-xs font-bold text-emerald-700">100% Clear</span>
+                <span className="text-[10px] text-stone-500 block">Collector Sanad NA</span>
+              </div>
 
-            {/* Hero Primary Actions */}
-            <div className="flex flex-wrap items-center gap-4 mb-8">
+              <div className="bg-white p-3 rounded-2xl border border-stone-200/90 shadow-sm">
+                <span className="text-[10px] text-stone-400 uppercase font-bold block">Beach Proximity</span>
+                <span className="text-xs font-bold text-stone-900">0 - 400m</span>
+                <span className="text-[10px] text-stone-500 block">Pristine Shores</span>
+              </div>
+
+              <div className="bg-white p-3 rounded-2xl border border-stone-200/90 shadow-sm">
+                <span className="text-[10px] text-stone-400 uppercase font-bold block">Air Quality</span>
+                <span className="text-xs font-bold text-teal-800">AQI 18</span>
+                <span className="text-[10px] text-stone-500 block">Pure Coastal Ozone</span>
+              </div>
+            </div>
+
+            {/* Action CTA Buttons */}
+            <div className="flex flex-wrap items-center gap-3 pt-2">
               <button
                 onClick={onOpenSiteVisit}
-                className="px-7 py-3.5 rounded-xl font-bold text-xs sm:text-sm text-stone-950 bg-gradient-to-r from-amber-400 via-amber-300 to-yellow-400 hover:from-amber-300 hover:to-yellow-300 shadow-xl shadow-amber-950/40 hover:scale-[1.02] transition-all flex items-center gap-2 cursor-pointer"
+                className="px-6 py-3.5 rounded-xl font-bold text-xs sm:text-sm text-white bg-stone-900 hover:bg-stone-800 shadow-lg shadow-stone-900/15 hover:scale-[1.02] transition-all flex items-center gap-2 cursor-pointer"
               >
-                <Calendar className="w-4 h-4 text-stone-950" />
-                <span>Book VIP Site Visit (Free Tour & Lunch)</span>
-                <ArrowRight className="w-4 h-4" />
-              </button>
-
-              <button
-                onClick={onOpenBrochure}
-                className="px-5 py-3.5 rounded-xl font-semibold text-xs sm:text-sm text-white bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/20 transition-all flex items-center gap-2 cursor-pointer shadow-lg"
-              >
-                <FileText className="w-4 h-4 text-teal-300" />
-                <span>Download Legal Dossier & Rates</span>
+                <Calendar className="w-4 h-4 text-amber-300" />
+                <span>Schedule VIP Site Visit</span>
+                <ArrowRight className="w-4 h-4 text-stone-400" />
               </button>
 
               <a
-                href="#master-plan"
-                className="px-4 py-3.5 rounded-xl text-xs sm:text-sm font-semibold text-teal-300 hover:text-white transition-colors flex items-center gap-1.5"
+                href="#configurator"
+                className="px-5 py-3.5 rounded-xl font-bold text-xs sm:text-sm text-teal-900 bg-teal-50 hover:bg-teal-100 border border-teal-200 transition-all flex items-center gap-2 cursor-pointer"
               >
-                <Waves className="w-4 h-4 text-cyan-400" />
-                <span>Interactive Master Plan →</span>
+                <SlidersHorizontal className="w-4 h-4 text-teal-700" />
+                <span>Custom Villa Builder</span>
               </a>
-            </div>
 
-            {/* Trust Assurance Checklist */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-6 border-t border-white/15">
-              <div className="flex items-center gap-2 text-xs">
-                <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
-                <span className="text-stone-300">100% Clear 7/12</span>
-              </div>
-              <div className="flex items-center gap-2 text-xs">
-                <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
-                <span className="text-stone-300">Sanctioned Collector NA</span>
-              </div>
-              <div className="flex items-center gap-2 text-xs">
-                <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
-                <span className="text-stone-300">0 - 400m to Shore</span>
-              </div>
-              <div className="flex items-center gap-2 text-xs">
-                <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
-                <span className="text-stone-300">480+ Happy Owners</span>
-              </div>
+              <button
+                onClick={onOpenBrochure}
+                className="px-4 py-3.5 rounded-xl font-semibold text-xs sm:text-sm text-stone-700 hover:text-stone-900 border border-stone-300 hover:bg-stone-100 transition-all flex items-center gap-1.5 cursor-pointer"
+              >
+                <FileText className="w-4 h-4 text-stone-500" />
+                <span>Download Rates</span>
+              </button>
             </div>
 
           </div>
 
-          {/* Right Column: Dynamic Architectural Showcase Card (5 Cols) */}
+          {/* Right Column: Architectural Magazine Frame (5 Cols) */}
           <div className="lg:col-span-5">
-            <div className="bg-stone-900/90 rounded-3xl p-6 sm:p-7 border border-teal-500/30 backdrop-blur-xl shadow-2xl relative overflow-hidden group">
+            <div className="relative rounded-3xl overflow-hidden bg-stone-900 shadow-2xl border border-stone-200 group aspect-[4/5] sm:aspect-[1/1] flex flex-col justify-between p-6 sm:p-7 text-white">
               
-              {/* Subtle glowing ambient accent */}
-              <div className="absolute top-0 right-0 w-48 h-48 bg-teal-500/10 rounded-full blur-2xl pointer-events-none"></div>
+              {/* Dynamic Photo */}
+              <img 
+                key={activePersp.image}
+                src={activePersp.image} 
+                alt={activePersp.title} 
+                className="absolute inset-0 w-full h-full object-cover filter brightness-[0.72] group-hover:scale-105 transition-transform duration-700"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-stone-950 via-stone-950/40 to-black/30"></div>
 
-              {/* Card Header Tag */}
-              <div className="flex items-center justify-between mb-4">
-                <span className="px-3 py-1 rounded-full text-xs font-bold bg-amber-400/20 text-amber-300 border border-amber-400/40 flex items-center gap-1.5">
-                  <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+              {/* Card Top Pill Bar */}
+              <div className="relative z-10 flex items-center justify-between">
+                <span className="px-3 py-1 rounded-full text-xs font-bold bg-white/90 text-stone-900 backdrop-blur-md shadow-sm flex items-center gap-1.5">
+                  <Sparkles className="w-3.5 h-3.5 text-amber-600" />
                   {activePersp.badge}
                 </span>
 
-                <span className="text-xs font-mono text-teal-300 bg-teal-950/80 px-2.5 py-1 rounded-md border border-teal-800">
+                <span className="text-xs font-mono font-semibold bg-black/60 text-teal-300 backdrop-blur-md px-2.5 py-1 rounded-lg border border-white/20">
                   {activePersp.fsi}
                 </span>
               </div>
 
-              {/* Featured Project Title & Location */}
-              <h3 className="font-serif-luxury text-2xl sm:text-3xl font-bold text-white mb-1.5">
-                {activePersp.title}
-              </h3>
-              <div className="flex items-center gap-1.5 text-xs text-teal-300 font-semibold mb-4">
-                <MapPin className="w-3.5 h-3.5 text-amber-400" />
-                <span>{activePersp.location}</span>
-                <span className="text-stone-600">•</span>
-                <span className="text-cyan-300">{activePersp.beachDistance}</span>
-              </div>
-
-              {/* Tagline Description */}
-              <p className="text-xs text-stone-300 leading-relaxed mb-6 bg-stone-950/60 p-3.5 rounded-xl border border-stone-800">
-                {activePersp.tagline}
-              </p>
-
-              {/* Specs & Pricing Pill Grid */}
-              <div className="grid grid-cols-2 gap-3 mb-6 bg-stone-950/80 p-4 rounded-2xl border border-stone-800">
-                <div>
-                  <span className="text-[10px] text-stone-400 uppercase font-bold block">Investment Starting</span>
-                  <span className="text-xl sm:text-2xl font-black text-amber-300 tracking-tight">
-                    {activePersp.price}
-                  </span>
+              {/* Card Bottom Content */}
+              <div className="relative z-10 space-y-3">
+                <div className="flex items-center gap-1.5 text-xs text-amber-300 font-semibold">
+                  <MapPin className="w-3.5 h-3.5" />
+                  <span>{activePersp.location}</span>
+                  <span className="text-white/40">•</span>
+                  <span className="text-teal-200">{activePersp.beachDistance}</span>
                 </div>
 
-                <div>
-                  <span className="text-[10px] text-stone-400 uppercase font-bold block">Legal Guarantee</span>
-                  <span className="text-xs font-bold text-emerald-400 flex items-center gap-1 mt-1">
-                    <ShieldCheck className="w-3.5 h-3.5" />
-                    Collector Sanad NA
-                  </span>
+                <h3 className="font-serif-luxury text-2xl sm:text-3xl font-bold text-white leading-tight">
+                  {activePersp.title}
+                </h3>
+
+                <p className="text-xs text-stone-200 line-clamp-2 leading-relaxed">
+                  {activePersp.tagline}
+                </p>
+
+                <div className="pt-3 border-t border-white/20 flex items-center justify-between">
+                  <div>
+                    <span className="text-[10px] text-stone-300 uppercase font-semibold block">Investment From</span>
+                    <span className="text-2xl font-black text-amber-300 tracking-tight">{activePersp.price}</span>
+                  </div>
+
+                  <button
+                    onClick={() => {
+                      const el = document.getElementById('properties');
+                      if (el) el.scrollIntoView({ behavior: 'smooth' });
+                    }}
+                    className="px-4 py-2 rounded-xl bg-white text-stone-950 hover:bg-amber-300 font-bold text-xs shadow-md transition-colors cursor-pointer flex items-center gap-1"
+                  >
+                    <span>View Units</span>
+                    <ChevronRight className="w-3.5 h-3.5" />
+                  </button>
                 </div>
-              </div>
-
-              {/* Direct Card Actions */}
-              <div className="grid grid-cols-2 gap-3">
-                <button
-                  onClick={() => {
-                    const el = document.getElementById('properties');
-                    if (el) el.scrollIntoView({ behavior: 'smooth' });
-                  }}
-                  className="py-3 px-3 rounded-xl border border-teal-600/80 hover:bg-teal-900/40 text-teal-200 text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer"
-                >
-                  <span>View Specifications</span>
-                  <ChevronRight className="w-3.5 h-3.5" />
-                </button>
-
-                <button
-                  onClick={onOpenSiteVisit}
-                  className="py-3 px-3 rounded-xl bg-gradient-to-r from-teal-700 to-emerald-700 hover:from-teal-600 hover:to-emerald-600 text-white text-xs font-bold shadow-md transition-all flex items-center justify-center gap-1.5 cursor-pointer"
-                >
-                  <Calendar className="w-3.5 h-3.5" />
-                  <span>Reserve Visit</span>
-                </button>
-              </div>
-
-              {/* Bottom Weather & Distance Micro-Ticker */}
-              <div className="mt-5 pt-4 border-t border-stone-800/80 flex items-center justify-between text-[11px] text-stone-400">
-                <span className="flex items-center gap-1">
-                  <Sun className="w-3 h-3 text-amber-400" />
-                  Dapoli: 26°C Sunny Sea Breeze
-                </span>
-                <span className="text-emerald-400 font-medium">AQI 18 (Pure Ozone)</span>
               </div>
 
             </div>
@@ -310,22 +278,19 @@ export default function Hero({
 
         </div>
 
-      </div>
-
-      {/* Floating Interactive Property Search Island (Bottom of Hero) */}
-      <div className="relative z-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full mt-2">
-        <div className="bg-white rounded-2xl p-4 sm:p-5 shadow-2xl border border-stone-200/90 text-stone-900">
-          <div className="flex flex-col lg:flex-row items-stretch lg:items-center gap-3 sm:gap-4">
+        {/* Floating Property Search Island */}
+        <div className="bg-white rounded-3xl p-5 sm:p-6 shadow-xl border border-stone-200/90 text-stone-900">
+          <div className="flex flex-col lg:flex-row items-stretch lg:items-center gap-4">
             
-            {/* Field 1: Category */}
+            {/* Field 1 */}
             <div className="flex-1">
-              <label className="block text-[11px] font-bold text-stone-600 uppercase tracking-wider mb-1">
+              <label className="block text-[11px] font-bold text-stone-500 uppercase tracking-wider mb-1.5">
                 Property Category
               </label>
               <select
                 value={selectedCategory}
                 onChange={(e) => setSelectedCategory(e.target.value)}
-                className="w-full bg-stone-50 border border-stone-300 rounded-xl px-3.5 py-2.5 text-xs sm:text-sm font-semibold text-stone-800 focus:outline-none focus:ring-2 focus:ring-teal-700 cursor-pointer"
+                className="w-full bg-stone-50 border border-stone-300 rounded-xl px-4 py-2.5 text-xs sm:text-sm font-bold text-stone-900 focus:outline-none focus:ring-2 focus:ring-teal-700 cursor-pointer"
               >
                 <option value="All">All Coastal Properties & NA Plots</option>
                 <option value="NA Plot">Collector NA Plots (Ladghar / Anjarle)</option>
@@ -335,15 +300,15 @@ export default function Hero({
               </select>
             </div>
 
-            {/* Field 2: Location */}
+            {/* Field 2 */}
             <div className="flex-1">
-              <label className="block text-[11px] font-bold text-stone-600 uppercase tracking-wider mb-1">
+              <label className="block text-[11px] font-bold text-stone-500 uppercase tracking-wider mb-1.5">
                 Dapoli Shore / Beach
               </label>
               <select
                 value={selectedLocation}
                 onChange={(e) => setSelectedLocation(e.target.value)}
-                className="w-full bg-stone-50 border border-stone-300 rounded-xl px-3.5 py-2.5 text-xs sm:text-sm font-semibold text-stone-800 focus:outline-none focus:ring-2 focus:ring-teal-700 cursor-pointer"
+                className="w-full bg-stone-50 border border-stone-300 rounded-xl px-4 py-2.5 text-xs sm:text-sm font-bold text-stone-900 focus:outline-none focus:ring-2 focus:ring-teal-700 cursor-pointer"
               >
                 <option value="All">All Beaches & Locations in Dapoli</option>
                 <option value="Murud">Murud Beach (Direct Sand Access & Watersports)</option>
@@ -354,15 +319,15 @@ export default function Hero({
               </select>
             </div>
 
-            {/* Field 3: Budget */}
+            {/* Field 3 */}
             <div className="flex-1">
-              <label className="block text-[11px] font-bold text-stone-600 uppercase tracking-wider mb-1">
+              <label className="block text-[11px] font-bold text-stone-500 uppercase tracking-wider mb-1.5">
                 Investment Budget
               </label>
               <select
                 value={selectedBudget}
                 onChange={(e) => setSelectedBudget(e.target.value)}
-                className="w-full bg-stone-50 border border-stone-300 rounded-xl px-3.5 py-2.5 text-xs sm:text-sm font-semibold text-stone-800 focus:outline-none focus:ring-2 focus:ring-teal-700 cursor-pointer"
+                className="w-full bg-stone-50 border border-stone-300 rounded-xl px-4 py-2.5 text-xs sm:text-sm font-bold text-stone-900 focus:outline-none focus:ring-2 focus:ring-teal-700 cursor-pointer"
               >
                 <option value="All">Any Budget</option>
                 <option value="Under 30L">Under ₹30 Lakhs (Ideal NA Plots)</option>
@@ -372,11 +337,11 @@ export default function Hero({
               </select>
             </div>
 
-            {/* Search Button */}
+            {/* Search CTA */}
             <div className="lg:w-auto flex items-end">
               <button
                 onClick={onApplySearch}
-                className="w-full lg:w-auto px-7 py-3 rounded-xl bg-teal-900 hover:bg-teal-950 text-white font-bold text-xs sm:text-sm flex items-center justify-center gap-2 shadow-md hover:shadow-lg transition-all cursor-pointer h-[44px]"
+                className="w-full lg:w-auto px-7 py-3 rounded-xl bg-teal-800 hover:bg-teal-900 text-white font-bold text-xs sm:text-sm flex items-center justify-center gap-2 shadow-md transition-all cursor-pointer h-[44px]"
               >
                 <Search className="w-4 h-4 text-amber-300" />
                 <span>Search Available Units</span>
@@ -385,8 +350,8 @@ export default function Hero({
 
           </div>
         </div>
-      </div>
 
+      </div>
     </section>
   );
 }

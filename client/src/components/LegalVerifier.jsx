@@ -51,7 +51,7 @@ export default function LegalVerifier({ onOpenBrochure }) {
   };
 
   return (
-    <section className="py-20 bg-stone-100/80 border-t border-stone-200">
+    <section id="legal-verifier" className="py-20 bg-stone-100/80 border-t border-stone-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Header */}

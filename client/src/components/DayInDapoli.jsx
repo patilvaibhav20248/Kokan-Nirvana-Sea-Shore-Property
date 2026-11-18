@@ -58,7 +58,7 @@ export default function DayInDapoli() {
   const current = times[activeSlot];
 
   return (
-    <section className="py-20 bg-stone-950 text-white border-t border-stone-800">
+    <section id="day-in-dapoli" className="py-20 bg-stone-950 text-white border-t border-stone-800">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Header */}
