@@ -1,0 +1,1 @@
+# Kokan-Nirvana-Sea-Shore-Property
