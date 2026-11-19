@@ -15,13 +15,19 @@ const firebaseConfig = {
 let app;
 let db;
 let isFirebaseInitialized = false;
+const isRealFirebaseKey = Boolean(firebaseConfig.apiKey && !firebaseConfig.apiKey.includes('Demo'));
 
 try {
-  app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
-  db = getFirestore(app);
-  isFirebaseInitialized = true;
+  if (isRealFirebaseKey) {
+    app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
+    db = getFirestore(app);
+    isFirebaseInitialized = true;
+  } else {
+    // Demo key - run in high-performance local mode
+    isFirebaseInitialized = false;
+  }
 } catch (error) {
   console.warn("Firebase initialization warning (using local fallback sync):", error.message);
 }
 
-export { app, db, isFirebaseInitialized, firebaseConfig };
+export { app, db, isFirebaseInitialized, isRealFirebaseKey, firebaseConfig };

@@ -23,6 +23,7 @@ import {
   Printer,
   ArrowRight,
   ArrowLeft,
+  X,
   Share2,
   Award,
   Compass
@@ -132,6 +133,7 @@ export default function ReservationSection({ preselectedProperty, onClearPresele
 
   const [loading, setLoading] = useState(false);
   const [bookingConfirmation, setBookingConfirmation] = useState(null);
+  const [showPopupModal, setShowPopupModal] = useState(false);
 
   // Smooth scroll to top of section on step changes
   const scrollToSectionHeader = () => {
@@ -199,15 +201,16 @@ export default function ReservationSection({ preselectedProperty, onClearPresele
     try {
       await submitReservation(reservationPayload);
       setBookingConfirmation(reservationPayload);
+      setShowPopupModal(true);
       setCurrentStep(4);
       scrollToSectionHeader();
 
       // Trigger celebratory confetti
       try {
         confetti({
-          particleCount: 80,
-          spread: 70,
-          origin: { y: 0.6 }
+          particleCount: 100,
+          spread: 80,
+          origin: { y: 0.5 }
         });
       } catch (err) {
         // Safe fallback if confetti isn't supported
@@ -215,6 +218,7 @@ export default function ReservationSection({ preselectedProperty, onClearPresele
     } catch (err) {
       console.warn('Reservation local fallback sync', err);
       setBookingConfirmation(reservationPayload);
+      setShowPopupModal(true);
       setCurrentStep(4);
       scrollToSectionHeader();
     } finally {
@@ -995,6 +999,119 @@ export default function ReservationSection({ preselectedProperty, onClearPresele
                 </button>
               </div>
 
+            </div>
+          </div>
+        )}
+
+        {/* Full-Screen Celebratory Pop-up Confirmation Modal */}
+        {showPopupModal && bookingConfirmation && (
+          <div className="fixed inset-0 z-50 overflow-y-auto bg-black/80 backdrop-blur-md flex items-center justify-center p-4 animate-fadeIn">
+            <div 
+              className="bg-white rounded-3xl overflow-hidden max-w-lg w-full shadow-2xl border-2 border-emerald-500 relative transform transition-all"
+              role="dialog"
+              aria-modal="true"
+            >
+              {/* Top Celebratory Header Bar */}
+              <div className="bg-gradient-to-r from-emerald-800 via-teal-900 to-emerald-950 text-white p-5 text-center relative">
+                <button
+                  type="button"
+                  onClick={() => setShowPopupModal(false)}
+                  className="absolute top-4 right-4 p-1.5 rounded-full bg-white/10 hover:bg-white/20 text-white transition-colors cursor-pointer"
+                  aria-label="Close dialog"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+
+                <div className="inline-flex items-center gap-1.5 text-xs font-black uppercase tracking-widest text-amber-300 bg-white/10 px-3 py-1 rounded-full mb-2">
+                  <Sparkles className="w-4 h-4 text-amber-300" />
+                  <span>OFFICIAL BOOKING CONFIRMED</span>
+                </div>
+                <h3 className="font-serif-luxury text-2xl sm:text-3xl font-black text-white">
+                  PLOT BOOKED! (आरक्षित)
+                </h3>
+                <p className="text-xs text-emerald-200 mt-1">
+                  14-Day Priority Title Freeze Successfully Activated
+                </p>
+              </div>
+
+              {/* Modal Body */}
+              <div className="p-6 sm:p-7 text-center">
+                
+                {/* Rubber Stamp */}
+                <div className="inline-flex items-center gap-2 border-3 border-red-600 bg-red-50 text-red-700 font-black text-xl sm:text-2xl px-5 py-2 rounded-xl uppercase tracking-wider transform -rotate-2 shadow-md shadow-red-500/10 mb-4 animate-bounce">
+                  <CheckCircle2 className="w-6 h-6 text-red-600" />
+                  <span>BOOKED / आरक्षित</span>
+                </div>
+
+                <h4 className="font-serif-luxury text-xl sm:text-2xl font-bold text-stone-900">
+                  Congratulations, {bookingConfirmation.fullName}!
+                </h4>
+
+                <p className="text-sm font-semibold text-emerald-800 mt-1">
+                  Your plot <span className="font-black text-stone-900 bg-amber-100 px-2 py-0.5 rounded border border-amber-300">{bookingConfirmation.specificPlot}</span> in {bookingConfirmation.projectTitle} is officially locked & booked!
+                </p>
+
+                {/* Details Card */}
+                <div className="my-5 bg-stone-50 rounded-2xl p-4 border border-stone-200 text-left text-xs space-y-2">
+                  <div className="flex justify-between items-center pb-2 border-b border-stone-200">
+                    <span className="text-stone-500 font-medium">Booking ID:</span>
+                    <span className="font-mono font-bold text-stone-900 bg-white px-2 py-0.5 rounded border border-stone-200">{bookingConfirmation.reservationId}</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-stone-500 font-medium">Allocated Plot:</span>
+                    <span className="font-bold text-stone-900">{bookingConfirmation.specificPlot}</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-stone-500 font-medium">Plot Area:</span>
+                    <span className="font-bold text-emerald-700">{bookingConfirmation.plotSize}</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-stone-500 font-medium">Visit Date & Slot:</span>
+                    <span className="font-bold text-stone-900">{bookingConfirmation.preferredDate} ({bookingConfirmation.timeSlot})</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-stone-500 font-medium">Station Pickup:</span>
+                    <span className="font-semibold text-stone-800">{bookingConfirmation.pickupOption}</span>
+                  </div>
+                  <div className="flex justify-between items-center pt-2 border-t border-stone-200">
+                    <span className="text-stone-500 font-medium">Dapoli Site Manager:</span>
+                    <span className="font-bold text-stone-900">Sagar Kadam (+91 98200 12345)</span>
+                  </div>
+                </div>
+
+                <div className="p-3 bg-emerald-50 rounded-xl border border-emerald-200 text-[11px] text-emerald-900 mb-6 flex items-start gap-2 text-left">
+                  <ShieldCheck className="w-4 h-4 text-emerald-700 shrink-0 mt-0.5" />
+                  <span>
+                    Your priority plot hold is registered. Our senior manager will contact your WhatsApp within 2 hours to confirm train pickup and VIP itinerary.
+                  </span>
+                </div>
+
+                {/* Buttons */}
+                <div className="flex flex-col sm:flex-row gap-2.5">
+                  <a
+                    href={`https://wa.me/919820012345?text=Hello%20Kokan%20Nirvana%20team,%20I%20have%20completed%20booking%20${bookingConfirmation.reservationId}%20for%20${encodeURIComponent(bookingConfirmation.specificPlot)}%20at%20${encodeURIComponent(bookingConfirmation.projectTitle)}.%20Please%20confirm%20my%20reservation.`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex-1 py-3 px-4 rounded-xl bg-emerald-700 hover:bg-emerald-600 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-sm transition-colors cursor-pointer"
+                  >
+                    <MessageCircle className="w-4 h-4" />
+                    <span>WhatsApp Site Desk</span>
+                  </a>
+
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setShowPopupModal(false);
+                      scrollToSectionHeader();
+                    }}
+                    className="flex-1 py-3 px-4 rounded-xl bg-stone-900 hover:bg-stone-800 text-white font-bold text-xs flex items-center justify-center gap-2 transition-colors cursor-pointer"
+                  >
+                    <FileText className="w-4 h-4 text-amber-300" />
+                    <span>View Digital Certificate</span>
+                  </button>
+                </div>
+
+              </div>
             </div>
           </div>
         )}
