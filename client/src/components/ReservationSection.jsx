@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { 
   Calendar, 
   ShieldCheck, 
@@ -20,11 +20,21 @@ import {
   BadgePercent,
   Check,
   RefreshCw,
-  Printer
+  Printer,
+  ArrowRight,
+  ArrowLeft,
+  Share2,
+  Award,
+  Compass
 } from 'lucide-react';
+import confetti from 'canvas-confetti';
 import { submitReservation } from '../firebase/firebaseService';
 
 export default function ReservationSection({ preselectedProperty, onClearPreselected }) {
+  // Stepper State: 1 (Plan & Plot) -> 2 (Buyer & Travel) -> 3 (Review & Summary) -> 4 (Confirmed Digital Pass)
+  const [currentStep, setCurrentStep] = useState(1);
+  const sectionRef = useRef(null);
+
   // Reservation Mode: 'token' (₹21k Refundable Plot Hold) | 'visit' (Complimentary Site Visit) | 'legal' (Title Consultation)
   const [reservationType, setReservationType] = useState('token');
 
@@ -86,7 +96,7 @@ export default function ReservationSection({ preselectedProperty, onClearPresele
   const [selectedProjectId, setSelectedProjectId] = useState(availableProjects[0].id);
   const [selectedSpecificPlot, setSelectedSpecificPlot] = useState('');
 
-  // Update when parent preselects a property (e.g. from PropertyCard or Saved drawer)
+  // Update when parent preselects a property
   useEffect(() => {
     if (preselectedProperty && preselectedProperty.title) {
       const pTitle = String(preselectedProperty.title).toLowerCase();
@@ -100,6 +110,7 @@ export default function ReservationSection({ preselectedProperty, onClearPresele
       } else {
         setSelectedSpecificPlot(String(preselectedProperty.title));
       }
+      setCurrentStep(1);
     }
   }, [preselectedProperty]);
 
@@ -122,14 +133,42 @@ export default function ReservationSection({ preselectedProperty, onClearPresele
   const [loading, setLoading] = useState(false);
   const [bookingConfirmation, setBookingConfirmation] = useState(null);
 
-  // Form submit handler
-  const handleReservationSubmit = async (e) => {
-    e.preventDefault();
-    if (!form.fullName || !form.phone || !form.preferredDate) {
-      alert('Please fill in your Name, Phone Number, and Preferred Date.');
+  // Smooth scroll to top of section on step changes
+  const scrollToSectionHeader = () => {
+    if (sectionRef.current) {
+      sectionRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  };
+
+  // Step 1 -> Step 2 validation
+  const handleProceedToStep2 = (e) => {
+    if (e) e.preventDefault();
+    if (!form.preferredDate) {
+      alert('Please select your preferred visit date to continue.');
       return;
     }
+    setCurrentStep(2);
+    scrollToSectionHeader();
+  };
 
+  // Step 2 -> Step 3 validation
+  const handleProceedToStep3 = (e) => {
+    if (e) e.preventDefault();
+    if (!form.fullName.trim()) {
+      alert('Please enter your Full Name.');
+      return;
+    }
+    if (!form.phone.trim() || form.phone.trim().length < 8) {
+      alert('Please enter a valid WhatsApp / Phone Number.');
+      return;
+    }
+    setCurrentStep(3);
+    scrollToSectionHeader();
+  };
+
+  // Step 3 -> Step 4 (Final Submission)
+  const handleFinalSubmit = async (e) => {
+    if (e) e.preventDefault();
     setLoading(true);
 
     const reservationId = `KN-RES-${Math.floor(100000 + Math.random() * 900000)}`;
@@ -160,9 +199,24 @@ export default function ReservationSection({ preselectedProperty, onClearPresele
     try {
       await submitReservation(reservationPayload);
       setBookingConfirmation(reservationPayload);
+      setCurrentStep(4);
+      scrollToSectionHeader();
+
+      // Trigger celebratory confetti
+      try {
+        confetti({
+          particleCount: 80,
+          spread: 70,
+          origin: { y: 0.6 }
+        });
+      } catch (err) {
+        // Safe fallback if confetti isn't supported
+      }
     } catch (err) {
       console.warn('Reservation local fallback sync', err);
       setBookingConfirmation(reservationPayload);
+      setCurrentStep(4);
+      scrollToSectionHeader();
     } finally {
       setLoading(false);
     }
@@ -172,191 +226,116 @@ export default function ReservationSection({ preselectedProperty, onClearPresele
     window.print();
   };
 
+  const stepsList = [
+    { num: 1, label: 'Plot & Plan' },
+    { num: 2, label: 'Buyer & Travel' },
+    { num: 3, label: 'Review & Terms' },
+    { num: 4, label: 'Confirmed Pass' }
+  ];
+
   return (
-    <section id="reservation" className="py-20 bg-stone-100 text-stone-900 border-t border-stone-200 scroll-mt-20">
+    <section 
+      id="reservation" 
+      ref={sectionRef}
+      className="py-20 bg-stone-100 text-stone-900 border-t border-stone-200 scroll-mt-20"
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-12">
+        <div className="text-center max-w-3xl mx-auto mb-10">
           <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-bold bg-amber-900/10 text-amber-900 border border-amber-900/20 mb-3">
             <Sparkles className="w-3.5 h-3.5 text-amber-800" />
             <span>Official Booking & Reservation Desk</span>
           </div>
 
-          <h2 className="font-serif-luxury text-3xl sm:text-4xl lg:text-5xl font-bold text-stone-900 tracking-tight mb-4">
+          <h2 className="font-serif-luxury text-3xl sm:text-4xl lg:text-5xl font-bold text-stone-900 tracking-tight mb-3">
             Reserve Your Dream Piece of Paradise
           </h2>
 
-          <p className="text-stone-600 text-sm sm:text-base leading-relaxed">
-            Secure your preferred sea-facing NA plot with a <strong className="text-stone-900">100% refundable token (₹21,000)</strong> or schedule a <strong className="text-stone-900">VIP weekend site inspection</strong> with complimentary station pickup from Khed.
+          <p className="text-stone-600 text-xs sm:text-sm leading-relaxed">
+            Follow the 4 simple steps below to lock your preferred NA plot with a <strong className="text-stone-900">100% refundable token (₹21,000)</strong> or schedule a <strong className="text-stone-900">VIP weekend site visit</strong> with complimentary Khed station pickup.
           </p>
         </div>
 
-        {/* Trust Badges Strip */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 mb-10 max-w-5xl mx-auto">
-          <div className="bg-white p-4 rounded-2xl border border-stone-200/90 shadow-2xs flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center shrink-0">
-              <ShieldCheck className="w-5 h-5" />
-            </div>
-            <div>
-              <span className="text-xs font-bold text-stone-900 block leading-tight">100% Refundable</span>
-              <span className="text-[11px] text-stone-500">15-day money-back guarantee</span>
-            </div>
-          </div>
+        {/* Stepper Progress Bar */}
+        <div className="max-w-3xl mx-auto mb-10">
+          <div className="bg-white rounded-2xl p-4 sm:p-5 border border-stone-200/90 shadow-xs">
+            <div className="flex items-center justify-between relative">
+              {/* Connecting line */}
+              <div className="absolute left-6 right-6 top-1/2 -translate-y-1/2 h-1 bg-stone-200 -z-0">
+                <div 
+                  className="h-full bg-amber-900 transition-all duration-500"
+                  style={{ width: `${((currentStep - 1) / (stepsList.length - 1)) * 100}%` }}
+                ></div>
+              </div>
 
-          <div className="bg-white p-4 rounded-2xl border border-stone-200/90 shadow-2xs flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-amber-50 text-amber-700 flex items-center justify-center shrink-0">
-              <Building2 className="w-5 h-5" />
-            </div>
-            <div>
-              <span className="text-xs font-bold text-stone-900 block leading-tight">Collector NA Class-1</span>
-              <span className="text-[11px] text-stone-500">Separate 7/12 & 8-A extract</span>
-            </div>
-          </div>
+              {stepsList.map((step) => {
+                const isCompleted = step.num < currentStep;
+                const isActive = step.num === currentStep;
 
-          <div className="bg-white p-4 rounded-2xl border border-stone-200/90 shadow-2xs flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-blue-50 text-blue-700 flex items-center justify-center shrink-0">
-              <Train className="w-5 h-5" />
-            </div>
-            <div>
-              <span className="text-xs font-bold text-stone-900 block leading-tight">Station Pickup</span>
-              <span className="text-[11px] text-stone-500">Khed Station (Vande Bharat)</span>
-            </div>
-          </div>
-
-          <div className="bg-white p-4 rounded-2xl border border-stone-200/90 shadow-2xs flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-teal-50 text-teal-700 flex items-center justify-center shrink-0">
-              <CheckCircle2 className="w-5 h-5" />
-            </div>
-            <div>
-              <span className="text-xs font-bold text-stone-900 block leading-tight">TILR Demarcation</span>
-              <span className="text-[11px] text-stone-500">Government boundary pegs</span>
+                return (
+                  <div key={step.num} className="relative z-10 flex flex-col items-center">
+                    <button
+                      type="button"
+                      disabled={step.num > currentStep}
+                      onClick={() => {
+                        if (step.num < currentStep && currentStep !== 4) {
+                          setCurrentStep(step.num);
+                          scrollToSectionHeader();
+                        }
+                      }}
+                      className={`w-9 h-9 sm:w-10 sm:h-10 rounded-full font-bold text-xs sm:text-sm flex items-center justify-center transition-all ${
+                        isCompleted
+                          ? 'bg-emerald-700 text-white shadow-sm cursor-pointer'
+                          : isActive
+                            ? 'bg-amber-900 text-white ring-4 ring-amber-200 shadow-md'
+                            : 'bg-stone-200 text-stone-500 cursor-not-allowed'
+                      }`}
+                    >
+                      {isCompleted ? <Check className="w-5 h-5 stroke-[2.5]" /> : step.num}
+                    </button>
+                    <span className={`text-[10px] sm:text-xs font-bold mt-1.5 whitespace-nowrap ${
+                      isActive ? 'text-amber-950 font-extrabold' : isCompleted ? 'text-emerald-800' : 'text-stone-400'
+                    }`}>
+                      {step.label}
+                    </span>
+                  </div>
+                );
+              })}
             </div>
           </div>
         </div>
 
-        {/* Confirmation Voucher (If Submitted) */}
-        {bookingConfirmation ? (
-          <div className="max-w-3xl mx-auto bg-white rounded-3xl overflow-hidden border border-emerald-300 shadow-xl p-6 sm:p-10 animate-fadeIn">
-            <div className="text-center pb-6 border-b border-stone-200">
-              <div className="w-16 h-16 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center mx-auto mb-3">
-                <CheckCircle2 className="w-10 h-10" />
-              </div>
-              <span className="px-3 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800">
-                Reservation Confirmed • Booking Pass Issued
-              </span>
-              <h3 className="font-serif-luxury text-2xl sm:text-3xl font-bold text-stone-900 mt-2">
-                Booking Reference: {bookingConfirmation.reservationId}
-              </h3>
-              <p className="text-xs sm:text-sm text-stone-600 mt-1">
-                A digital copy has been recorded for <strong className="text-stone-900">{bookingConfirmation.fullName}</strong>.
-              </p>
-            </div>
-
-            {/* Voucher Details Table */}
-            <div className="my-6 grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs bg-stone-50 p-5 rounded-2xl border border-stone-200">
-              <div>
-                <span className="text-stone-400 uppercase font-bold block text-[10px]">Project & Location</span>
-                <span className="font-bold text-stone-900 text-sm">{bookingConfirmation.projectTitle}</span>
-                <span className="text-stone-500 block">{bookingConfirmation.location}</span>
-              </div>
-
-              <div>
-                <span className="text-stone-400 uppercase font-bold block text-[10px]">Allocated Plot & Size</span>
-                <span className="font-bold text-stone-900 text-sm">{bookingConfirmation.specificPlot}</span>
-                <span className="text-emerald-700 font-semibold block">{bookingConfirmation.plotSize}</span>
-              </div>
-
-              <div>
-                <span className="text-stone-400 uppercase font-bold block text-[10px]">Reservation Type</span>
-                <span className="font-bold text-stone-900">
-                  {bookingConfirmation.reservationType === 'token' 
-                    ? '14-Day Priority Plot Token Hold (₹21,000)' 
-                    : 'VIP Site Visit & Property Tour'}
+        {/* Step 1: Select Plan & Plot */}
+        {currentStep === 1 && (
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 max-w-6xl mx-auto animate-fadeIn">
+            <div className="lg:col-span-8 bg-white rounded-3xl p-6 sm:p-8 border border-stone-200/90 shadow-sm">
+              <div className="flex items-center justify-between pb-4 mb-6 border-b border-stone-100">
+                <div>
+                  <span className="text-[10px] uppercase font-bold text-amber-800 tracking-wider">
+                    Step 1 of 4: Reservation Plan & Location
+                  </span>
+                  <h3 className="font-serif-luxury text-xl sm:text-2xl font-bold text-stone-900">
+                    Choose Your Reservation Type & Plot
+                  </h3>
+                </div>
+                <span className="px-2.5 py-1 rounded-full text-xs font-bold bg-amber-100 text-amber-900">
+                  Step 1
                 </span>
               </div>
 
-              <div>
-                <span className="text-stone-400 uppercase font-bold block text-[10px]">Scheduled Visit Date & Time</span>
-                <span className="font-bold text-stone-900">
-                  {bookingConfirmation.preferredDate} ({bookingConfirmation.timeSlot})
-                </span>
-              </div>
-
-              <div>
-                <span className="text-stone-400 uppercase font-bold block text-[10px]">Pickup Arrangement</span>
-                <span className="font-medium text-stone-800">{bookingConfirmation.pickupOption}</span>
-              </div>
-
-              <div>
-                <span className="text-stone-400 uppercase font-bold block text-[10px]">Assigned Dapoli Site Manager</span>
-                <span className="font-bold text-stone-900">Sagar Kadam (+91 98200 12345)</span>
-              </div>
-            </div>
-
-            {/* Next Steps Card */}
-            <div className="bg-amber-50/70 border border-amber-200 rounded-2xl p-4 text-xs text-amber-900 space-y-1.5 mb-6">
-              <span className="font-bold block flex items-center gap-1.5 text-amber-950">
-                <Sparkles className="w-4 h-4 text-amber-700" />
-                What happens next:
-              </span>
-              <p>1. Our site manager will contact you within 2 hours to confirm your travel timings and send the exact Google Maps location pin.</p>
-              <p>2. A welcome hamper and complimentary Konkani refreshments (Ukadiche Modak & Fresh Coconut Water) will be kept ready at the site office.</p>
-              <p>3. If booking with a token, your 14-day hold period starts from your scheduled visit date with a 100% money-back guarantee.</p>
-            </div>
-
-            {/* Action Buttons */}
-            <div className="flex flex-wrap gap-3 justify-center">
-              <button
-                type="button"
-                onClick={handlePrint}
-                className="px-5 py-2.5 rounded-xl border border-stone-300 hover:bg-stone-100 text-stone-800 font-bold text-xs flex items-center gap-2 cursor-pointer transition-colors"
-              >
-                <Printer className="w-4 h-4 text-stone-600" />
-                <span>Print / Save Booking Pass</span>
-              </button>
-
-              <a
-                href={`https://wa.me/919820012345?text=Hello%20Kokan%20Nirvana%20team,%20I%20have%20completed%20reservation%20${bookingConfirmation.reservationId}%20for%20${encodeURIComponent(bookingConfirmation.projectTitle)}.%20Please%20confirm%20my%20site%20visit.`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="px-5 py-2.5 rounded-xl bg-emerald-700 hover:bg-emerald-600 text-white font-bold text-xs flex items-center gap-2 cursor-pointer transition-colors shadow-sm"
-              >
-                <MessageCircle className="w-4 h-4" />
-                <span>Send to WhatsApp Concierge</span>
-              </a>
-
-              <button
-                type="button"
-                onClick={() => setBookingConfirmation(null)}
-                className="px-5 py-2.5 rounded-xl bg-stone-900 hover:bg-stone-800 text-white font-bold text-xs flex items-center gap-2 cursor-pointer transition-colors"
-              >
-                <RefreshCw className="w-3.5 h-3.5" />
-                <span>Make Another Reservation</span>
-              </button>
-            </div>
-          </div>
-        ) : (
-
-          /* Interactive Multi-Step Reservation Desk */
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 max-w-6xl mx-auto">
-            
-            {/* Left 7 Columns: Reservation Form */}
-            <div className="lg:col-span-7 bg-white rounded-3xl p-6 sm:p-8 border border-stone-200/90 shadow-sm">
-              
-              {/* Step 1: Select Reservation Mode */}
+              {/* Mode Selector */}
               <div className="mb-6">
-                <span className="text-[11px] uppercase font-bold text-amber-900 tracking-wider block mb-2">
-                  Step 1: Choose Your Reservation Type
-                </span>
-
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+                <label className="text-xs font-bold text-stone-800 block mb-2">
+                  Select Booking Plan:
+                </label>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                   <button
                     type="button"
                     onClick={() => setReservationType('token')}
-                    className={`p-3 rounded-2xl text-left border transition-all cursor-pointer ${
+                    className={`p-3.5 rounded-2xl text-left border transition-all cursor-pointer ${
                       reservationType === 'token'
-                        ? 'border-amber-900 bg-amber-50/70 shadow-xs'
+                        ? 'border-amber-900 bg-amber-50/70 shadow-xs ring-2 ring-amber-900/10'
                         : 'border-stone-200 hover:border-stone-300 bg-stone-50'
                     }`}
                   >
@@ -365,16 +344,16 @@ export default function ReservationSection({ preselectedProperty, onClearPresele
                       <span className="text-[10px] font-bold text-amber-900 bg-amber-100 px-1.5 py-0.5 rounded">₹21,000</span>
                     </div>
                     <p className="text-[11px] text-stone-500 leading-snug">
-                      14-day plot freeze. 100% refundable token.
+                      Freeze plot for 14 days. 100% money-back guarantee.
                     </p>
                   </button>
 
                   <button
                     type="button"
                     onClick={() => setReservationType('visit')}
-                    className={`p-3 rounded-2xl text-left border transition-all cursor-pointer ${
+                    className={`p-3.5 rounded-2xl text-left border transition-all cursor-pointer ${
                       reservationType === 'visit'
-                        ? 'border-amber-900 bg-amber-50/70 shadow-xs'
+                        ? 'border-amber-900 bg-amber-50/70 shadow-xs ring-2 ring-amber-900/10'
                         : 'border-stone-200 hover:border-stone-300 bg-stone-50'
                     }`}
                   >
@@ -383,16 +362,16 @@ export default function ReservationSection({ preselectedProperty, onClearPresele
                       <span className="text-[10px] font-bold text-emerald-800 bg-emerald-100 px-1.5 py-0.5 rounded">Free</span>
                     </div>
                     <p className="text-[11px] text-stone-500 leading-snug">
-                      Weekend tour + station pickup + local lunch.
+                      Guided weekend tour + station pickup + local lunch.
                     </p>
                   </button>
 
                   <button
                     type="button"
                     onClick={() => setReservationType('legal')}
-                    className={`p-3 rounded-2xl text-left border transition-all cursor-pointer ${
+                    className={`p-3.5 rounded-2xl text-left border transition-all cursor-pointer ${
                       reservationType === 'legal'
-                        ? 'border-amber-900 bg-amber-50/70 shadow-xs'
+                        ? 'border-amber-900 bg-amber-50/70 shadow-xs ring-2 ring-amber-900/10'
                         : 'border-stone-200 hover:border-stone-300 bg-stone-50'
                     }`}
                   >
@@ -401,139 +380,204 @@ export default function ReservationSection({ preselectedProperty, onClearPresele
                       <span className="text-[10px] font-bold text-blue-800 bg-blue-100 px-1.5 py-0.5 rounded">Free</span>
                     </div>
                     <p className="text-[11px] text-stone-500 leading-snug">
-                      1-on-1 legal review with Adv. Rajeshwar Patil.
+                      Legal paper verification with Adv. Rajeshwar Patil.
                     </p>
                   </button>
                 </div>
               </div>
 
-              {/* Step 2: Select Project & Available Plot */}
-              <div className="mb-6">
-                <span className="text-[11px] uppercase font-bold text-amber-900 tracking-wider block mb-2">
-                  Step 2: Select Project & Plot
-                </span>
+              {/* Project & Plot Selection */}
+              <div className="space-y-4 mb-8">
+                <div>
+                  <label className="text-xs font-bold text-stone-800 block mb-1.5">
+                    Select Dapoli Coastal Project:
+                  </label>
+                  <select
+                    value={selectedProjectId}
+                    onChange={(e) => {
+                      setSelectedProjectId(e.target.value);
+                      const p = availableProjects.find((x) => x.id === e.target.value);
+                      setSelectedSpecificPlot(p ? p.availablePlots[0] : '');
+                    }}
+                    className="w-full px-4 py-3 rounded-xl border border-stone-300 bg-white text-xs font-semibold text-stone-900 focus:outline-hidden focus:ring-2 focus:ring-amber-900 shadow-2xs"
+                  >
+                    {availableProjects.map((p) => (
+                      <option key={p.id} value={p.id}>
+                        {p.title} • {p.price} ({p.plotSize})
+                      </option>
+                    ))}
+                  </select>
+                </div>
 
-                <div className="space-y-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="text-xs font-semibold text-stone-700 block mb-1">
-                      Select Dapoli Coastal Project:
+                    <label className="text-xs font-bold text-stone-800 block mb-1.5">
+                      Select Specific Available Plot:
                     </label>
                     <select
-                      value={selectedProjectId}
-                      onChange={(e) => {
-                        setSelectedProjectId(e.target.value);
-                        const p = availableProjects.find((x) => x.id === e.target.value);
-                        setSelectedSpecificPlot(p ? p.availablePlots[0] : '');
-                      }}
-                      className="w-full px-3.5 py-2.5 rounded-xl border border-stone-300 bg-white text-xs font-medium text-stone-900 focus:outline-hidden focus:ring-2 focus:ring-amber-900"
+                      value={selectedSpecificPlot}
+                      onChange={(e) => setSelectedSpecificPlot(e.target.value)}
+                      className="w-full px-4 py-3 rounded-xl border border-stone-300 bg-white text-xs font-semibold text-stone-900 focus:outline-hidden focus:ring-2 focus:ring-amber-900 shadow-2xs"
                     >
-                      {availableProjects.map((p) => (
-                        <option key={p.id} value={p.id}>
-                          {p.title} • {p.price} ({p.plotSize})
+                      {activeProject.availablePlots.map((plot) => (
+                        <option key={plot} value={plot}>
+                          {plot}
                         </option>
                       ))}
                     </select>
                   </div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <div>
-                      <label className="text-xs font-semibold text-stone-700 block mb-1">
-                        Select Specific Available Plot:
-                      </label>
-                      <select
-                        value={selectedSpecificPlot}
-                        onChange={(e) => setSelectedSpecificPlot(e.target.value)}
-                        className="w-full px-3.5 py-2.5 rounded-xl border border-stone-300 bg-white text-xs font-medium text-stone-900 focus:outline-hidden focus:ring-2 focus:ring-amber-900"
-                      >
-                        {activeProject.availablePlots.map((plot) => (
-                          <option key={plot} value={plot}>
-                            {plot}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-
-                    <div>
-                      <label className="text-xs font-semibold text-stone-700 block mb-1">
-                        Preferred Visit Date:
-                      </label>
+                  <div>
+                    <label className="text-xs font-bold text-stone-800 block mb-1.5">
+                      Preferred Inspection / Visit Date: *
+                    </label>
+                    <div className="relative">
+                      <Calendar className="w-4 h-4 text-stone-400 absolute left-3 top-3.5" />
                       <input
                         type="date"
                         required
                         value={form.preferredDate}
                         onChange={(e) => setForm({ ...form, preferredDate: e.target.value })}
-                        className="w-full px-3.5 py-2.5 rounded-xl border border-stone-300 bg-white text-xs font-medium text-stone-900 focus:outline-hidden focus:ring-2 focus:ring-amber-900"
+                        className="w-full pl-9 pr-4 py-3 rounded-xl border border-stone-300 bg-white text-xs font-medium text-stone-900 focus:outline-hidden focus:ring-2 focus:ring-amber-900 shadow-2xs"
                       />
                     </div>
                   </div>
                 </div>
               </div>
 
-              {/* Step 3: Buyer Details Form */}
-              <form onSubmit={handleReservationSubmit} className="space-y-4">
-                <span className="text-[11px] uppercase font-bold text-amber-900 tracking-wider block">
-                  Step 3: Buyer Details & Travel Logistics
+              {/* Next Step Action Button */}
+              <div className="pt-4 border-t border-stone-100 flex items-center justify-between">
+                <span className="text-xs text-stone-500">
+                  Step 1 of 4 complete
                 </span>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <button
+                  type="button"
+                  onClick={handleProceedToStep2}
+                  className="px-6 py-3.5 rounded-xl bg-amber-900 hover:bg-amber-800 text-white font-bold text-xs sm:text-sm flex items-center gap-2 shadow-sm transition-all cursor-pointer"
+                >
+                  <span>Continue to Step 2: Buyer & Logistics</span>
+                  <ArrowRight className="w-4 h-4 text-amber-200" />
+                </button>
+              </div>
+            </div>
+
+            {/* Sidebar Summary Card */}
+            <div className="lg:col-span-4 space-y-4">
+              <div className="bg-white rounded-3xl p-6 border border-stone-200 shadow-sm">
+                <span className="text-[10px] uppercase font-bold text-stone-400 tracking-wider block mb-2">
+                  Plot Preview
+                </span>
+                <h4 className="font-serif-luxury text-lg font-bold text-stone-900">
+                  {activeProject.title}
+                </h4>
+                <div className="flex items-center gap-1.5 text-xs text-stone-500 mt-1 mb-4">
+                  <MapPin className="w-3.5 h-3.5 text-amber-600 shrink-0" />
+                  <span>{activeProject.location}</span>
+                </div>
+
+                <div className="space-y-2 text-xs border-t border-stone-100 pt-3">
+                  <div className="flex justify-between">
+                    <span className="text-stone-500">Allocated Plot:</span>
+                    <span className="font-bold text-stone-900">{selectedSpecificPlot || activeProject.availablePlots[0]}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-stone-500">Plot Size:</span>
+                    <span className="font-bold text-stone-900">{activeProject.plotSize}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-stone-500">Base Agreement:</span>
+                    <span className="font-bold text-stone-900">{activeProject.price}</span>
+                  </div>
+                </div>
+
+                <div className="mt-4 p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-xs text-emerald-900">
+                  <ShieldCheck className="w-4 h-4 text-emerald-700 inline mr-1" />
+                  <strong>100% Refundable Token Policy</strong>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Step 2: Buyer Information & Travel Logistics */}
+        {currentStep === 2 && (
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 max-w-6xl mx-auto animate-fadeIn">
+            <div className="lg:col-span-8 bg-white rounded-3xl p-6 sm:p-8 border border-stone-200/90 shadow-sm">
+              <div className="flex items-center justify-between pb-4 mb-6 border-b border-stone-100">
+                <div>
+                  <span className="text-[10px] uppercase font-bold text-amber-800 tracking-wider">
+                    Step 2 of 4: Buyer Details & Travel Logistics
+                  </span>
+                  <h3 className="font-serif-luxury text-xl sm:text-2xl font-bold text-stone-900">
+                    Who Is Traveling & Booking?
+                  </h3>
+                </div>
+                <span className="px-2.5 py-1 rounded-full text-xs font-bold bg-amber-100 text-amber-900">
+                  Step 2
+                </span>
+              </div>
+
+              <div className="space-y-4 mb-8">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="text-xs font-semibold text-stone-700 block mb-1">
+                    <label className="text-xs font-bold text-stone-800 block mb-1">
                       Full Name *
                     </label>
                     <div className="relative">
-                      <User className="w-4 h-4 text-stone-400 absolute left-3 top-3" />
+                      <User className="w-4 h-4 text-stone-400 absolute left-3 top-3.5" />
                       <input
                         type="text"
                         required
                         placeholder="e.g. Vaibhav Patil"
                         value={form.fullName}
                         onChange={(e) => setForm({ ...form, fullName: e.target.value })}
-                        className="w-full pl-9 pr-3.5 py-2.5 rounded-xl border border-stone-300 bg-white text-xs text-stone-900 focus:outline-hidden focus:ring-2 focus:ring-amber-900"
+                        className="w-full pl-9 pr-3.5 py-2.5 rounded-xl border border-stone-300 text-xs text-stone-900 focus:ring-2 focus:ring-amber-900"
                       />
                     </div>
                   </div>
 
                   <div>
-                    <label className="text-xs font-semibold text-stone-700 block mb-1">
-                      Mobile / WhatsApp Number *
+                    <label className="text-xs font-bold text-stone-800 block mb-1">
+                      WhatsApp / Phone Number *
                     </label>
                     <div className="relative">
-                      <Phone className="w-4 h-4 text-stone-400 absolute left-3 top-3" />
+                      <Phone className="w-4 h-4 text-stone-400 absolute left-3 top-3.5" />
                       <input
                         type="tel"
                         required
                         placeholder="+91 98200 XXXXX"
                         value={form.phone}
                         onChange={(e) => setForm({ ...form, phone: e.target.value })}
-                        className="w-full pl-9 pr-3.5 py-2.5 rounded-xl border border-stone-300 bg-white text-xs text-stone-900 focus:outline-hidden focus:ring-2 focus:ring-amber-900"
+                        className="w-full pl-9 pr-3.5 py-2.5 rounded-xl border border-stone-300 text-xs text-stone-900 focus:ring-2 focus:ring-amber-900"
                       />
                     </div>
                   </div>
 
                   <div>
-                    <label className="text-xs font-semibold text-stone-700 block mb-1">
+                    <label className="text-xs font-bold text-stone-800 block mb-1">
                       Email Address
                     </label>
                     <div className="relative">
-                      <Mail className="w-4 h-4 text-stone-400 absolute left-3 top-3" />
+                      <Mail className="w-4 h-4 text-stone-400 absolute left-3 top-3.5" />
                       <input
                         type="email"
-                        placeholder="vaibhav@example.com"
+                        placeholder="name@gmail.com"
                         value={form.email}
                         onChange={(e) => setForm({ ...form, email: e.target.value })}
-                        className="w-full pl-9 pr-3.5 py-2.5 rounded-xl border border-stone-300 bg-white text-xs text-stone-900 focus:outline-hidden focus:ring-2 focus:ring-amber-900"
+                        className="w-full pl-9 pr-3.5 py-2.5 rounded-xl border border-stone-300 text-xs text-stone-900 focus:ring-2 focus:ring-amber-900"
                       />
                     </div>
                   </div>
 
                   <div>
-                    <label className="text-xs font-semibold text-stone-700 block mb-1">
+                    <label className="text-xs font-bold text-stone-800 block mb-1">
                       City of Residence
                     </label>
                     <select
                       value={form.city}
                       onChange={(e) => setForm({ ...form, city: e.target.value })}
-                      className="w-full px-3.5 py-2.5 rounded-xl border border-stone-300 bg-white text-xs font-medium text-stone-900 focus:outline-hidden focus:ring-2 focus:ring-amber-900"
+                      className="w-full px-3.5 py-2.5 rounded-xl border border-stone-300 text-xs text-stone-900 focus:ring-2 focus:ring-amber-900"
                     >
                       <option value="Mumbai">Mumbai (Western / Central / Harbour)</option>
                       <option value="Pune">Pune (Kothrud / Baner / Wakad / PCMC)</option>
@@ -547,17 +591,17 @@ export default function ReservationSection({ preselectedProperty, onClearPresele
                   </div>
 
                   <div>
-                    <label className="text-xs font-semibold text-stone-700 block mb-1">
-                      Preferred Time Slot:
+                    <label className="text-xs font-bold text-stone-800 block mb-1">
+                      Preferred Arrival Time:
                     </label>
                     <div className="relative">
-                      <Clock className="w-4 h-4 text-stone-400 absolute left-3 top-3" />
+                      <Clock className="w-4 h-4 text-stone-400 absolute left-3 top-3.5" />
                       <select
                         value={form.timeSlot}
                         onChange={(e) => setForm({ ...form, timeSlot: e.target.value })}
-                        className="w-full pl-9 pr-3.5 py-2.5 rounded-xl border border-stone-300 bg-white text-xs font-medium text-stone-900 focus:outline-hidden focus:ring-2 focus:ring-amber-900"
+                        className="w-full pl-9 pr-3.5 py-2.5 rounded-xl border border-stone-300 text-xs text-stone-900 focus:ring-2 focus:ring-amber-900"
                       >
-                        <option value="Morning (10:00 AM)">Morning (10:00 AM - Ideal for sea breeze)</option>
+                        <option value="Morning (10:00 AM)">Morning (10:00 AM - Ideal sea breeze)</option>
                         <option value="Afternoon (2:00 PM)">Afternoon (2:00 PM - Post lunch tour)</option>
                         <option value="Sunset Slot (4:30 PM)">Sunset Slot (4:30 PM - Golden hour beach view)</option>
                       </select>
@@ -565,15 +609,15 @@ export default function ReservationSection({ preselectedProperty, onClearPresele
                   </div>
 
                   <div>
-                    <label className="text-xs font-semibold text-stone-700 block mb-1">
-                      Travel & Pickup Logistics:
+                    <label className="text-xs font-bold text-stone-800 block mb-1">
+                      Travel & Station Pickup:
                     </label>
                     <div className="relative">
-                      <Car className="w-4 h-4 text-stone-400 absolute left-3 top-3" />
+                      <Car className="w-4 h-4 text-stone-400 absolute left-3 top-3.5" />
                       <select
                         value={form.pickupOption}
                         onChange={(e) => setForm({ ...form, pickupOption: e.target.value })}
-                        className="w-full pl-9 pr-3.5 py-2.5 rounded-xl border border-stone-300 bg-white text-xs font-medium text-stone-900 focus:outline-hidden focus:ring-2 focus:ring-amber-900"
+                        className="w-full pl-9 pr-3.5 py-2.5 rounded-xl border border-stone-300 text-xs text-stone-900 focus:ring-2 focus:ring-amber-900"
                       >
                         <option value="Khed Railway Station (Free Station Pickup)">Free Pickup from Khed Station (Vande Bharat / Tejas)</option>
                         <option value="Mangaon Pickup (NH-66)">Free Pickup from Mangaon (NH-66)</option>
@@ -584,151 +628,351 @@ export default function ReservationSection({ preselectedProperty, onClearPresele
                 </div>
 
                 <div>
-                  <label className="text-xs font-semibold text-stone-700 block mb-1">
-                    Special Preferences / Questions:
+                  <label className="text-xs font-bold text-stone-800 block mb-1">
+                    Special Preferences / Specific Questions:
                   </label>
                   <textarea
                     rows={2}
-                    placeholder="e.g. Prefer sea-facing corner plot, looking for bank loan support, want to construct wooden holiday cottage..."
+                    placeholder="e.g. Prefer sea-facing corner plot, looking for bank loan quotation, need custom villa architect consultation..."
                     value={form.specialRequirements}
                     onChange={(e) => setForm({ ...form, specialRequirements: e.target.value })}
-                    className="w-full px-3.5 py-2 rounded-xl border border-stone-300 bg-white text-xs text-stone-900 focus:outline-hidden focus:ring-2 focus:ring-amber-900"
+                    className="w-full px-3.5 py-2 rounded-xl border border-stone-300 text-xs text-stone-900 focus:ring-2 focus:ring-amber-900"
                   />
                 </div>
+              </div>
 
-                <div className="flex items-center gap-2 pt-1">
-                  <input
-                    type="checkbox"
-                    id="terms"
-                    checked={form.acceptTerms}
-                    onChange={(e) => setForm({ ...form, acceptTerms: e.target.checked })}
-                    className="w-4 h-4 rounded text-amber-900 focus:ring-amber-900 border-stone-300"
-                  />
-                  <label htmlFor="terms" className="text-[11px] text-stone-600">
-                    I agree to receive booking pass details and site coordinator contact via WhatsApp / Phone.
-                  </label>
-                </div>
+              {/* Action Buttons */}
+              <div className="pt-4 border-t border-stone-100 flex items-center justify-between">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setCurrentStep(1);
+                    scrollToSectionHeader();
+                  }}
+                  className="px-5 py-3 rounded-xl border border-stone-300 text-stone-700 hover:bg-stone-50 font-bold text-xs flex items-center gap-1.5 transition-colors cursor-pointer"
+                >
+                  <ArrowLeft className="w-4 h-4 text-stone-500" />
+                  <span>Back to Step 1</span>
+                </button>
 
                 <button
-                  type="submit"
+                  type="button"
+                  onClick={handleProceedToStep3}
+                  className="px-6 py-3.5 rounded-xl bg-amber-900 hover:bg-amber-800 text-white font-bold text-xs sm:text-sm flex items-center gap-2 shadow-sm transition-all cursor-pointer"
+                >
+                  <span>Continue to Step 3: Review & Summary</span>
+                  <ArrowRight className="w-4 h-4 text-amber-200" />
+                </button>
+              </div>
+            </div>
+
+            {/* Sidebar Summary Card */}
+            <div className="lg:col-span-4 space-y-4">
+              <div className="bg-white rounded-3xl p-6 border border-stone-200 shadow-sm">
+                <span className="text-[10px] uppercase font-bold text-stone-400 tracking-wider block mb-2">
+                  Trip Timeline
+                </span>
+                <div className="space-y-3 text-xs">
+                  <div>
+                    <span className="text-stone-400 block text-[10px] uppercase font-bold">Visit Date:</span>
+                    <span className="font-bold text-stone-900">{form.preferredDate || 'Not selected'}</span>
+                  </div>
+                  <div>
+                    <span className="text-stone-400 block text-[10px] uppercase font-bold">Time Window:</span>
+                    <span className="font-bold text-stone-900">{form.timeSlot}</span>
+                  </div>
+                  <div>
+                    <span className="text-stone-400 block text-[10px] uppercase font-bold">Pickup Service:</span>
+                    <span className="font-medium text-stone-700">{form.pickupOption}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Step 3: Review & Final Confirmation */}
+        {currentStep === 3 && (
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 max-w-6xl mx-auto animate-fadeIn">
+            <div className="lg:col-span-8 bg-white rounded-3xl p-6 sm:p-8 border border-stone-200/90 shadow-sm">
+              <div className="flex items-center justify-between pb-4 mb-6 border-b border-stone-100">
+                <div>
+                  <span className="text-[10px] uppercase font-bold text-amber-800 tracking-wider">
+                    Step 3 of 4: Verification & Confirmation
+                  </span>
+                  <h3 className="font-serif-luxury text-xl sm:text-2xl font-bold text-stone-900">
+                    Review Your Reservation Details
+                  </h3>
+                </div>
+                <span className="px-2.5 py-1 rounded-full text-xs font-bold bg-amber-100 text-amber-900">
+                  Step 3
+                </span>
+              </div>
+
+              {/* Review Table */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs bg-stone-50 p-5 rounded-2xl border border-stone-200 mb-6">
+                <div>
+                  <span className="text-stone-400 uppercase font-bold block text-[10px]">Project & Location</span>
+                  <span className="font-bold text-stone-900 text-sm">{activeProject.title}</span>
+                  <span className="text-stone-500 block">{activeProject.location}</span>
+                </div>
+
+                <div>
+                  <span className="text-stone-400 uppercase font-bold block text-[10px]">Plot Choice & Dimensions</span>
+                  <span className="font-bold text-stone-900 text-sm">{selectedSpecificPlot || activeProject.availablePlots[0]}</span>
+                  <span className="text-emerald-700 font-semibold block">{activeProject.plotSize}</span>
+                </div>
+
+                <div>
+                  <span className="text-stone-400 uppercase font-bold block text-[10px]">Buyer Name & Phone</span>
+                  <span className="font-bold text-stone-900">{form.fullName}</span>
+                  <span className="text-stone-600 block">{form.phone} ({form.city})</span>
+                </div>
+
+                <div>
+                  <span className="text-stone-400 uppercase font-bold block text-[10px]">Visit Date & Time Slot</span>
+                  <span className="font-bold text-stone-900">{form.preferredDate}</span>
+                  <span className="text-stone-600 block">{form.timeSlot}</span>
+                </div>
+
+                <div>
+                  <span className="text-stone-400 uppercase font-bold block text-[10px]">Station Pickup Arranged</span>
+                  <span className="font-semibold text-stone-800">{form.pickupOption}</span>
+                </div>
+
+                <div>
+                  <span className="text-stone-400 uppercase font-bold block text-[10px]">Reservation Mode</span>
+                  <span className="font-bold text-amber-900">
+                    {reservationType === 'token' ? 'Priority 14-Day Hold (₹21,000 Refundable)' : 'Complimentary VIP Site Visit'}
+                  </span>
+                </div>
+              </div>
+
+              {/* Guarantee Banner */}
+              <div className="p-4 rounded-2xl bg-emerald-50 border border-emerald-200 text-xs text-emerald-900 mb-6 flex items-start gap-3">
+                <ShieldCheck className="w-5 h-5 text-emerald-700 shrink-0 mt-0.5" />
+                <div>
+                  <strong className="block text-emerald-950 font-bold">Official Dapoli Land Guarantee</strong>
+                  <span className="text-[11px] text-emerald-800">
+                    Your token is 100% refundable within 15 days of booking if you decide not to proceed. 
+                    Collector NA Class-1 with separate 7/12 extract in your name.
+                  </span>
+                </div>
+              </div>
+
+              {/* Terms Checkbox */}
+              <div className="flex items-center gap-2 mb-6">
+                <input
+                  type="checkbox"
+                  id="final-terms"
+                  checked={form.acceptTerms}
+                  onChange={(e) => setForm({ ...form, acceptTerms: e.target.checked })}
+                  className="w-4 h-4 rounded text-amber-900 focus:ring-amber-900 border-stone-300"
+                />
+                <label htmlFor="final-terms" className="text-xs text-stone-700 font-medium">
+                  I confirm the details above and authorize Kokan Nirvana to issue my digital reservation pass and contact me on WhatsApp.
+                </label>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="pt-4 border-t border-stone-100 flex items-center justify-between">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setCurrentStep(2);
+                    scrollToSectionHeader();
+                  }}
+                  className="px-5 py-3 rounded-xl border border-stone-300 text-stone-700 hover:bg-stone-50 font-bold text-xs flex items-center gap-1.5 transition-colors cursor-pointer"
+                >
+                  <ArrowLeft className="w-4 h-4 text-stone-500" />
+                  <span>Back to Edit</span>
+                </button>
+
+                <button
+                  type="button"
                   disabled={loading}
-                  className="w-full py-3.5 px-6 rounded-2xl bg-amber-900 hover:bg-amber-800 text-white font-bold text-sm transition-all shadow-md flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+                  onClick={handleFinalSubmit}
+                  className="px-7 py-3.5 rounded-xl bg-amber-900 hover:bg-amber-800 text-white font-bold text-xs sm:text-sm flex items-center gap-2 shadow-md transition-all cursor-pointer disabled:opacity-50"
                 >
                   {loading ? (
                     <>
                       <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                      <span>Generating Digital Booking Pass...</span>
+                      <span>Submitting & Generating Pass...</span>
                     </>
                   ) : (
                     <>
                       <Sparkles className="w-4 h-4 text-amber-200" />
-                      <span>
-                        {reservationType === 'token'
-                          ? `Confirm Priority Plot Reservation (₹21,000 Refundable)`
-                          : `Confirm Free VIP Site Visit Booking`}
-                      </span>
+                      <span>Submit & Issue Official Digital Pass</span>
+                      <ArrowRight className="w-4 h-4 text-amber-200" />
                     </>
                   )}
                 </button>
-              </form>
+              </div>
             </div>
 
-            {/* Right 5 Columns: Live Price & Guarantee Summary */}
-            <div className="lg:col-span-5 space-y-5">
-              
-              {/* Summary Card */}
-              <div className="bg-white rounded-3xl p-6 border border-stone-200/90 shadow-sm">
+            {/* Sidebar Summary Card */}
+            <div className="lg:col-span-4 space-y-4">
+              <div className="bg-white rounded-3xl p-6 border border-stone-200 shadow-sm">
                 <span className="text-[10px] uppercase font-bold text-stone-400 tracking-wider block mb-2">
-                  Reservation Breakdown
+                  Due Today
                 </span>
-
-                <div className="border-b border-stone-100 pb-4 mb-4">
-                  <h3 className="font-serif-luxury text-xl font-bold text-stone-900">
-                    {activeProject.title}
-                  </h3>
-                  <div className="flex items-center gap-1.5 text-xs text-stone-500 mt-1">
-                    <MapPin className="w-3.5 h-3.5 text-amber-600 shrink-0" />
-                    <span>{activeProject.location}</span>
-                  </div>
+                <div className="text-3xl font-black text-amber-900 mb-1">
+                  {reservationType === 'token' ? '₹21,000' : '₹0'}
                 </div>
-
-                <div className="space-y-2.5 text-xs">
-                  <div className="flex justify-between">
-                    <span className="text-stone-500">Allocated Plot:</span>
-                    <span className="font-bold text-stone-900">{selectedSpecificPlot || activeProject.availablePlots[0]}</span>
-                  </div>
-
-                  <div className="flex justify-between">
-                    <span className="text-stone-500">Plot Size:</span>
-                    <span className="font-bold text-stone-900">{activeProject.plotSize}</span>
-                  </div>
-
-                  <div className="flex justify-between">
-                    <span className="text-stone-500">Total Agreement Value:</span>
-                    <span className="font-bold text-stone-900">{activeProject.price}</span>
-                  </div>
-
-                  <div className="flex justify-between pt-2 border-t border-stone-100">
-                    <span className="text-stone-500">Stamp Duty + Reg. (6% Ratnagiri):</span>
-                    <span className="font-medium text-stone-700">Estimated ~₹1.75 L</span>
-                  </div>
-
-                  <div className="flex justify-between pt-3 border-t border-stone-200 text-sm">
-                    <span className="font-bold text-stone-900">Due Today (Reservation Token):</span>
-                    <span className="font-black text-amber-900">
-                      {reservationType === 'token' ? '₹21,000' : '₹0 (Free Visit)'}
-                    </span>
-                  </div>
-                </div>
-
-                {/* Refundability Guarantee */}
-                <div className="mt-5 p-3.5 rounded-2xl bg-emerald-50 border border-emerald-200 text-xs text-emerald-900">
-                  <div className="flex items-start gap-2">
-                    <ShieldCheck className="w-4 h-4 text-emerald-700 shrink-0 mt-0.5" />
-                    <div>
-                      <strong className="block text-emerald-950 font-bold">100% Refundable Token Policy</strong>
-                      <span className="text-[11px] text-emerald-800">
-                        Your ₹21,000 token is 100% refundable within 15 days of booking if you decide not to proceed after your site visit or legal due diligence.
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Direct Site Office Contacts */}
-              <div className="bg-stone-900 text-white rounded-3xl p-6 shadow-sm border border-stone-800">
-                <span className="text-[10px] uppercase font-bold text-amber-300 tracking-wider block mb-1">
-                  Dapoli Site Contact Desk
+                <span className="text-xs text-emerald-700 font-semibold block mb-4">
+                  {reservationType === 'token' ? '100% Refundable Token' : 'Free VIP Guest Pass'}
                 </span>
-                <h4 className="font-serif-luxury text-lg font-bold text-white mb-2">
-                  Need Help Choosing Your Plot?
-                </h4>
-                <p className="text-xs text-stone-300 leading-relaxed mb-4">
-                  Speak directly with our local land development team in Dapoli before making your reservation.
+                <p className="text-xs text-stone-500 leading-relaxed border-t border-stone-100 pt-3">
+                  Clicking the button will generate your official digital voucher with your unique Booking Reference ID and assigned site manager details.
                 </p>
+              </div>
+            </div>
+          </div>
+        )}
 
-                <div className="space-y-2 text-xs">
-                  <div className="flex items-center gap-2 text-stone-200">
-                    <User className="w-3.5 h-3.5 text-amber-400" />
-                    <span><strong>Sagar Kadam</strong> • Head of Site Operations (+91 98200 12345)</span>
-                  </div>
-                  <div className="flex items-center gap-2 text-stone-200">
-                    <FileText className="w-3.5 h-3.5 text-cyan-400" />
-                    <span><strong>Adv. Rajeshwar Patil</strong> • Land Revenue & 7/12 Title Advisor</span>
-                  </div>
-                </div>
+        {/* Step 4: Official Digital Pass & Next Steps Roadmap */}
+        {currentStep === 4 && bookingConfirmation && (
+          <div className="max-w-4xl mx-auto bg-white rounded-3xl overflow-hidden border border-emerald-300 shadow-2xl p-6 sm:p-10 animate-fadeIn">
+            
+            {/* Pass Header */}
+            <div className="text-center pb-6 border-b border-stone-200">
+              <div className="w-16 h-16 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center mx-auto mb-3">
+                <CheckCircle2 className="w-10 h-10" />
+              </div>
+              <span className="px-3.5 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800 inline-block mb-1">
+                Step 4 of 4: Reservation Active • Pass Issued
+              </span>
+              <h3 className="font-serif-luxury text-2xl sm:text-3xl lg:text-4xl font-bold text-stone-900 mt-2">
+                Booking Reference: {bookingConfirmation.reservationId}
+              </h3>
+              <p className="text-xs sm:text-sm text-stone-600 mt-1">
+                Your reservation has been recorded in the Dapoli site registry for <strong className="text-stone-900">{bookingConfirmation.fullName}</strong>.
+              </p>
+            </div>
 
-                <a
-                  href="https://wa.me/919820012345?text=Hello%20Kokan%20Nirvana%20team,%20I%20want%20to%20reserve%20a%20plot%20in%20Dapoli"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="mt-4 w-full py-2.5 px-4 rounded-xl bg-emerald-700 hover:bg-emerald-600 text-white font-bold text-xs flex items-center justify-center gap-2 transition-colors cursor-pointer"
-                >
-                  <MessageCircle className="w-4 h-4" />
-                  <span>Instant WhatsApp Reservation Assistance</span>
-                </a>
+            {/* Voucher Details Table */}
+            <div className="my-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 text-xs bg-stone-50 p-5 rounded-2xl border border-stone-200">
+              <div>
+                <span className="text-stone-400 uppercase font-bold block text-[10px]">Project & Location</span>
+                <span className="font-bold text-stone-900 text-sm">{bookingConfirmation.projectTitle}</span>
+                <span className="text-stone-500 block">{bookingConfirmation.location}</span>
               </div>
 
+              <div>
+                <span className="text-stone-400 uppercase font-bold block text-[10px]">Allocated Plot & Size</span>
+                <span className="font-bold text-stone-900 text-sm">{bookingConfirmation.specificPlot}</span>
+                <span className="text-emerald-700 font-semibold block">{bookingConfirmation.plotSize}</span>
+              </div>
+
+              <div>
+                <span className="text-stone-400 uppercase font-bold block text-[10px]">Reservation Status</span>
+                <span className="font-bold text-amber-900 block text-sm">
+                  {bookingConfirmation.reservationType === 'token' ? '14-Day Priority Plot Freeze' : 'VIP Site Inspection'}
+                </span>
+                <span className="text-[11px] text-emerald-700 font-semibold">100% Refundable Guarantee</span>
+              </div>
+
+              <div>
+                <span className="text-stone-400 uppercase font-bold block text-[10px]">Scheduled Visit Date</span>
+                <span className="font-bold text-stone-900 text-sm">{bookingConfirmation.preferredDate}</span>
+                <span className="text-stone-500 block">{bookingConfirmation.timeSlot}</span>
+              </div>
+
+              <div>
+                <span className="text-stone-400 uppercase font-bold block text-[10px]">Travel Pickup Choice</span>
+                <span className="font-semibold text-stone-800 text-sm">{bookingConfirmation.pickupOption}</span>
+              </div>
+
+              <div>
+                <span className="text-stone-400 uppercase font-bold block text-[10px]">Assigned Site Operations Lead</span>
+                <span className="font-bold text-stone-900 text-sm">Sagar Kadam</span>
+                <span className="text-emerald-700 font-semibold block">+91 98200 12345</span>
+              </div>
+            </div>
+
+            {/* Interactive "What Happens Next" 4-Step Roadmap */}
+            <div className="my-8 bg-amber-50/70 border border-amber-200 rounded-3xl p-6">
+              <h4 className="font-serif-luxury text-lg font-bold text-amber-950 mb-3 flex items-center gap-2">
+                <Compass className="w-5 h-5 text-amber-800" />
+                <span>Your Next Steps Journey:</span>
+              </h4>
+
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-4 text-xs">
+                <div className="bg-white p-3.5 rounded-2xl border border-amber-200/80 shadow-2xs">
+                  <div className="w-6 h-6 rounded-full bg-emerald-600 text-white font-bold text-[11px] flex items-center justify-center mb-2">
+                    ✓
+                  </div>
+                  <strong className="block text-stone-900 font-bold mb-1">Step 1: Pass Logged</strong>
+                  <p className="text-stone-500 leading-snug">
+                    Your digital pass is securely synchronized with our backend registry.
+                  </p>
+                </div>
+
+                <div className="bg-white p-3.5 rounded-2xl border border-amber-200/80 shadow-2xs">
+                  <div className="w-6 h-6 rounded-full bg-amber-800 text-white font-bold text-[11px] flex items-center justify-center mb-2">
+                    2
+                  </div>
+                  <strong className="block text-stone-900 font-bold mb-1">Step 2: Manager Call</strong>
+                  <p className="text-stone-500 leading-snug">
+                    Sagar Kadam will call your WhatsApp to confirm your travel timings.
+                  </p>
+                </div>
+
+                <div className="bg-white p-3.5 rounded-2xl border border-amber-200/80 shadow-2xs">
+                  <div className="w-6 h-6 rounded-full bg-amber-800 text-white font-bold text-[11px] flex items-center justify-center mb-2">
+                    3
+                  </div>
+                  <strong className="block text-stone-900 font-bold mb-1">Step 3: GPS Pin Sent</strong>
+                  <p className="text-stone-500 leading-snug">
+                    Receive direct Google Maps coordinates & Konkani hospitality voucher.
+                  </p>
+                </div>
+
+                <div className="bg-white p-3.5 rounded-2xl border border-amber-200/80 shadow-2xs">
+                  <div className="w-6 h-6 rounded-full bg-amber-800 text-white font-bold text-[11px] flex items-center justify-center mb-2">
+                    4
+                  </div>
+                  <strong className="block text-stone-900 font-bold mb-1">Step 4: Station Escort</strong>
+                  <p className="text-stone-500 leading-snug">
+                    Private pickup from Khed Railway Station to site office with local lunch.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="flex flex-wrap gap-3 justify-center pt-2">
+              <button
+                type="button"
+                onClick={handlePrint}
+                className="px-6 py-3 rounded-xl border border-stone-300 hover:bg-stone-50 text-stone-800 font-bold text-xs flex items-center gap-2 cursor-pointer transition-colors shadow-2xs"
+              >
+                <Printer className="w-4 h-4 text-stone-600" />
+                <span>Print / Save Digital Pass</span>
+              </button>
+
+              <a
+                href={`https://wa.me/919820012345?text=Hello%20Kokan%20Nirvana%20team,%20I%20have%20completed%20reservation%20${bookingConfirmation.reservationId}%20for%20${encodeURIComponent(bookingConfirmation.projectTitle)}.%20Please%20confirm%20my%20site%20visit.`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-6 py-3 rounded-xl bg-emerald-700 hover:bg-emerald-600 text-white font-bold text-xs flex items-center gap-2 cursor-pointer transition-colors shadow-sm"
+              >
+                <MessageCircle className="w-4 h-4" />
+                <span>Send to WhatsApp Concierge</span>
+              </a>
+
+              <button
+                type="button"
+                onClick={() => {
+                  setBookingConfirmation(null);
+                  setCurrentStep(1);
+                  scrollToSectionHeader();
+                }}
+                className="px-6 py-3 rounded-xl bg-stone-900 hover:bg-stone-800 text-white font-bold text-xs flex items-center gap-2 cursor-pointer transition-colors"
+              >
+                <RefreshCw className="w-3.5 h-3.5" />
+                <span>Make Another Reservation</span>
+              </button>
             </div>
 
           </div>
