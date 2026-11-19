@@ -10,7 +10,8 @@ import {
   CheckCircle2, 
   ChevronRight,
   Sun,
-  Navigation
+  Navigation,
+  Sparkles
 } from 'lucide-react';
 
 export default function Hero({ onOpenSiteVisit, onOpenBrochure }) {
