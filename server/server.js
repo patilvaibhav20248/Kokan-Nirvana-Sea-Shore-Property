@@ -265,7 +265,11 @@ app.get('/api/weather', (req, res) => {
 // Serve frontend static build if available
 const clientDistPath = path.join(__dirname, '..', 'client', 'dist');
 if (fs.existsSync(clientDistPath)) {
+  app.use('/Kokan-Nirvana-Sea-Shore-Property', express.static(clientDistPath));
   app.use(express.static(clientDistPath));
+  app.get('/Kokan-Nirvana-Sea-Shore-Property*', (req, res) => {
+    res.sendFile(path.join(clientDistPath, 'index.html'));
+  });
   app.get('*', (req, res, next) => {
     if (req.path.startsWith('/api')) return next();
     res.sendFile(path.join(clientDistPath, 'index.html'));
