@@ -11,8 +11,11 @@ import {
   MapPin, 
   Send,
   Coffee,
-  ShieldCheck
+  ShieldCheck,
+  MessageCircle,
+  Ticket
 } from 'lucide-react';
+import confetti from 'canvas-confetti';
 import { submitSiteVisit } from '../firebase/firebaseService';
 
 export default function VipSiteVisitModal({ property, onClose }) {
@@ -31,18 +34,28 @@ export default function VipSiteVisitModal({ property, onClose }) {
 
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [bookingRef, setBookingRef] = useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
+    const refCode = 'VIP-' + Math.floor(100000 + Math.random() * 900000);
+    setBookingRef(refCode);
+
     try {
-      await submitSiteVisit(form);
-      setSubmitted(true);
+      await submitSiteVisit({ ...form, refCode });
     } catch (err) {
-      console.error(err);
-      setSubmitted(true);
+      console.error('Submit error:', err);
     } finally {
       setLoading(false);
+      setSubmitted(true);
+      try {
+        confetti({
+          particleCount: 80,
+          spread: 70,
+          origin: { y: 0.6 }
+        });
+      } catch (e) {}
     }
   };
 
@@ -76,30 +89,70 @@ export default function VipSiteVisitModal({ property, onClose }) {
         {/* Content */}
         <div className="p-6 sm:p-8">
           {submitted ? (
-            <div className="text-center py-6 animate-fadeIn">
-              <div className="inline-flex items-center gap-2 border-4 border-emerald-600 bg-emerald-50 text-emerald-800 font-black text-xl sm:text-2xl px-5 py-2 rounded-2xl uppercase tracking-wider mb-4 shadow-md">
-                <CheckCircle2 className="w-6 h-6 text-emerald-600" />
+            <div className="text-center py-4 animate-fadeIn">
+              <div className="inline-flex items-center gap-2 border-4 border-emerald-600 bg-emerald-50 text-emerald-800 font-black text-xl sm:text-2xl px-6 py-2 rounded-2xl uppercase tracking-wider mb-3 shadow-md">
+                <CheckCircle2 className="w-7 h-7 text-emerald-600" />
                 <span>BOOKED & CONFIRMED! (आरक्षित)</span>
               </div>
-              <h4 className="font-serif-luxury text-2xl font-bold text-stone-900 mb-2">
-                VIP Site Visit Successfully Booked!
+              
+              <h4 className="font-serif-luxury text-2xl font-bold text-stone-900 mb-1">
+                VIP Site Visit Confirmed!
               </h4>
-              <p className="text-sm text-stone-600 max-w-md mx-auto mb-6">
-                Thank you, <strong className="text-stone-900">{form.name}</strong>. Your complimentary VIP site inspection is officially <strong>BOOKED</strong>. Our Dapoli hospitality concierge will contact you at <strong className="text-stone-900">{form.phone}</strong> to coordinate your Khed station pickup and refreshments.
+              <p className="text-xs text-stone-600 max-w-md mx-auto mb-4">
+                Thank you, <strong className="text-stone-900">{form.name}</strong>. Your complimentary Dapoli site inspection is locked in.
               </p>
-              <div className="flex justify-center gap-3">
+
+              {/* Digital Pass Summary Card */}
+              <div className="bg-stone-50 border border-stone-200 rounded-2xl p-4 max-w-md mx-auto text-left mb-5 shadow-sm space-y-2.5">
+                <div className="flex items-center justify-between border-b border-stone-200 pb-2">
+                  <span className="text-[11px] font-bold text-stone-500 uppercase tracking-wider flex items-center gap-1">
+                    <Ticket className="w-3.5 h-3.5 text-amber-600" />
+                    VIP Pass Reference
+                  </span>
+                  <span className="font-mono font-bold text-sm text-stone-900 bg-amber-100 text-amber-900 px-2 py-0.5 rounded-lg border border-amber-300">
+                    {bookingRef || 'VIP-847291'}
+                  </span>
+                </div>
+
+                <div className="grid grid-cols-2 gap-2 text-xs">
+                  <div>
+                    <span className="text-stone-500 block text-[10px] uppercase font-bold">Preferred Date</span>
+                    <span className="font-semibold text-stone-800 flex items-center gap-1 mt-0.5">
+                      <Calendar className="w-3.5 h-3.5 text-teal-700" />
+                      {form.preferredDate || 'This Weekend'}
+                    </span>
+                  </div>
+                  <div>
+                    <span className="text-stone-500 block text-[10px] uppercase font-bold">Pick-up Logistics</span>
+                    <span className="font-semibold text-stone-800 flex items-center gap-1 mt-0.5">
+                      <Car className="w-3.5 h-3.5 text-teal-700" />
+                      {form.pickupNeeded}
+                    </span>
+                  </div>
+                </div>
+
+                <div className="border-t border-stone-200 pt-2 flex items-center justify-between text-xs text-stone-600">
+                  <span>Guests: <strong>{form.guestCount} Persons</strong></span>
+                  <span className="text-emerald-700 font-bold flex items-center gap-1">
+                    <CheckCircle2 className="w-3.5 h-3.5" />
+                    Refreshments Included
+                  </span>
+                </div>
+              </div>
+
+              <div className="flex flex-col sm:flex-row justify-center gap-3 max-w-md mx-auto">
                 <a
-                  href={`https://wa.me/919820012345?text=Hello%20Kokan%20Nirvana%20team,%20I%20have%20booked%20a%20VIP%20site%20visit%20for%20${encodeURIComponent(form.propertyName || 'Dapoli Projects')}.`}
+                  href={`https://wa.me/919820012345?text=Hello%20Kokan%20Nirvana%20team,%20I%20have%20booked%20VIP%20site%20visit%20Pass%20${bookingRef || 'VIP'}.%20Name:%20${encodeURIComponent(form.name)}.%20Property:%20${encodeURIComponent(form.propertyName || 'Dapoli Projects')}.`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="px-5 py-2.5 rounded-xl bg-emerald-700 hover:bg-emerald-600 text-white font-bold text-xs flex items-center gap-2"
+                  className="px-5 py-3 rounded-xl bg-emerald-700 hover:bg-emerald-600 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-lg shadow-emerald-950/10 cursor-pointer"
                 >
                   <MessageCircle className="w-4 h-4" />
-                  <span>Confirm on WhatsApp</span>
+                  <span>Confirm on WhatsApp (+91 98200 12345)</span>
                 </a>
                 <button
                   onClick={onClose}
-                  className="px-6 py-2.5 rounded-xl bg-stone-900 text-white font-bold text-xs hover:bg-stone-800 transition-colors cursor-pointer"
+                  className="px-6 py-3 rounded-xl bg-stone-900 text-white font-bold text-xs hover:bg-stone-800 transition-colors cursor-pointer"
                 >
                   Done
                 </button>

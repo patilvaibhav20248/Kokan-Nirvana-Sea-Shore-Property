@@ -1,21 +1,21 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { 
-  Calendar, 
-  ShieldCheck, 
-  Car, 
-  Train, 
-  Clock, 
-  MapPin, 
-  CheckCircle2, 
-  Send, 
-  Sparkles, 
-  Phone, 
-  Mail, 
-  User, 
-  Download, 
-  MessageCircle, 
-  AlertCircle, 
-  FileText, 
+import {
+  Calendar,
+  ShieldCheck,
+  Car,
+  Train,
+  Clock,
+  MapPin,
+  CheckCircle2,
+  Send,
+  Sparkles,
+  Phone,
+  Mail,
+  User,
+  Download,
+  MessageCircle,
+  AlertCircle,
+  FileText,
   Building2,
   BadgePercent,
   Check,
@@ -103,7 +103,7 @@ export default function ReservationSection({ preselectedProperty, onClearPresele
       const pTitle = String(preselectedProperty.title).toLowerCase();
       const match = availableProjects.find(
         (p) => p.title.toLowerCase().includes(pTitle) ||
-               pTitle.includes(p.title.toLowerCase())
+          pTitle.includes(p.title.toLowerCase())
       );
       if (match) {
         setSelectedProjectId(match.id);
@@ -238,13 +238,13 @@ export default function ReservationSection({ preselectedProperty, onClearPresele
   ];
 
   return (
-    <section 
-      id="reservation" 
+    <section
+      id="reservation"
       ref={sectionRef}
       className="py-20 bg-stone-100 text-stone-900 border-t border-stone-200 scroll-mt-20"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        
+
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-10">
           <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-bold bg-amber-900/10 text-amber-900 border border-amber-900/20 mb-3">
@@ -267,7 +267,7 @@ export default function ReservationSection({ preselectedProperty, onClearPresele
             <div className="flex items-center justify-between relative">
               {/* Connecting line */}
               <div className="absolute left-6 right-6 top-1/2 -translate-y-1/2 h-1 bg-stone-200 -z-0">
-                <div 
+                <div
                   className="h-full bg-amber-900 transition-all duration-500"
                   style={{ width: `${((currentStep - 1) / (stepsList.length - 1)) * 100}%` }}
                 ></div>
@@ -288,19 +288,17 @@ export default function ReservationSection({ preselectedProperty, onClearPresele
                           scrollToSectionHeader();
                         }
                       }}
-                      className={`w-9 h-9 sm:w-10 sm:h-10 rounded-full font-bold text-xs sm:text-sm flex items-center justify-center transition-all ${
-                        isCompleted
+                      className={`w-9 h-9 sm:w-10 sm:h-10 rounded-full font-bold text-xs sm:text-sm flex items-center justify-center transition-all ${isCompleted
                           ? 'bg-emerald-700 text-white shadow-sm cursor-pointer'
                           : isActive
                             ? 'bg-amber-900 text-white ring-4 ring-amber-200 shadow-md'
                             : 'bg-stone-200 text-stone-500 cursor-not-allowed'
-                      }`}
+                        }`}
                     >
                       {isCompleted ? <Check className="w-5 h-5 stroke-[2.5]" /> : step.num}
                     </button>
-                    <span className={`text-[10px] sm:text-xs font-bold mt-1.5 whitespace-nowrap ${
-                      isActive ? 'text-amber-950 font-extrabold' : isCompleted ? 'text-emerald-800' : 'text-stone-400'
-                    }`}>
+                    <span className={`text-[10px] sm:text-xs font-bold mt-1.5 whitespace-nowrap ${isActive ? 'text-amber-950 font-extrabold' : isCompleted ? 'text-emerald-800' : 'text-stone-400'
+                      }`}>
                       {step.label}
                     </span>
                   </div>
@@ -337,11 +335,10 @@ export default function ReservationSection({ preselectedProperty, onClearPresele
                   <button
                     type="button"
                     onClick={() => setReservationType('token')}
-                    className={`p-3.5 rounded-2xl text-left border transition-all cursor-pointer ${
-                      reservationType === 'token'
+                    className={`p-3.5 rounded-2xl text-left border transition-all cursor-pointer ${reservationType === 'token'
                         ? 'border-amber-900 bg-amber-50/70 shadow-xs ring-2 ring-amber-900/10'
                         : 'border-stone-200 hover:border-stone-300 bg-stone-50'
-                    }`}
+                      }`}
                   >
                     <div className="flex items-center justify-between mb-1">
                       <span className="text-xs font-bold text-stone-900">Priority Plot Hold</span>
@@ -355,11 +352,10 @@ export default function ReservationSection({ preselectedProperty, onClearPresele
                   <button
                     type="button"
                     onClick={() => setReservationType('visit')}
-                    className={`p-3.5 rounded-2xl text-left border transition-all cursor-pointer ${
-                      reservationType === 'visit'
+                    className={`p-3.5 rounded-2xl text-left border transition-all cursor-pointer ${reservationType === 'visit'
                         ? 'border-amber-900 bg-amber-50/70 shadow-xs ring-2 ring-amber-900/10'
                         : 'border-stone-200 hover:border-stone-300 bg-stone-50'
-                    }`}
+                      }`}
                   >
                     <div className="flex items-center justify-between mb-1">
                       <span className="text-xs font-bold text-stone-900">VIP Site Visit</span>
@@ -373,11 +369,10 @@ export default function ReservationSection({ preselectedProperty, onClearPresele
                   <button
                     type="button"
                     onClick={() => setReservationType('legal')}
-                    className={`p-3.5 rounded-2xl text-left border transition-all cursor-pointer ${
-                      reservationType === 'legal'
+                    className={`p-3.5 rounded-2xl text-left border transition-all cursor-pointer ${reservationType === 'legal'
                         ? 'border-amber-900 bg-amber-50/70 shadow-xs ring-2 ring-amber-900/10'
                         : 'border-stone-200 hover:border-stone-300 bg-stone-50'
-                    }`}
+                      }`}
                   >
                     <div className="flex items-center justify-between mb-1">
                       <span className="text-xs font-bold text-stone-900">7/12 Title Review</span>
@@ -758,7 +753,7 @@ export default function ReservationSection({ preselectedProperty, onClearPresele
                 <div>
                   <strong className="block text-emerald-950 font-bold">Official Dapoli Land Guarantee</strong>
                   <span className="text-[11px] text-emerald-800">
-                    Your token is 100% refundable within 15 days of booking if you decide not to proceed. 
+                    Your token is 100% refundable within 15 days of booking if you decide not to proceed.
                     Collector NA Class-1 with separate 7/12 extract in your name.
                   </span>
                 </div>
@@ -837,7 +832,7 @@ export default function ReservationSection({ preselectedProperty, onClearPresele
         {/* Step 4: Official Digital Pass & Next Steps Roadmap */}
         {currentStep === 4 && bookingConfirmation && (
           <div className="max-w-4xl mx-auto bg-white rounded-3xl overflow-hidden border-2 border-emerald-400 shadow-2xl animate-fadeIn">
-            
+
             {/* Top Celebratory Header Bar */}
             <div className="bg-gradient-to-r from-emerald-800 via-teal-900 to-emerald-950 text-white text-center py-3.5 px-4 font-black uppercase tracking-widest text-xs sm:text-sm flex items-center justify-center gap-2 shadow-inner border-b border-emerald-700">
               <Sparkles className="w-4 h-4 text-amber-300 animate-spin" />
@@ -849,7 +844,7 @@ export default function ReservationSection({ preselectedProperty, onClearPresele
             <div className="p-6 sm:p-10">
               {/* Giant Celebratory Stamp Header */}
               <div className="text-center pb-8 border-b border-stone-200">
-                
+
                 {/* Official Rubber Stamp */}
                 <div className="inline-flex items-center gap-2.5 border-4 border-red-600 bg-red-50 text-red-700 font-black text-2xl sm:text-4xl px-6 py-2.5 rounded-2xl uppercase tracking-wider transform -rotate-2 shadow-lg shadow-red-600/10 mb-4 animate-bounce">
                   <CheckCircle2 className="w-7 h-7 sm:w-9 sm:h-9 text-red-600" />
@@ -1006,7 +1001,7 @@ export default function ReservationSection({ preselectedProperty, onClearPresele
         {/* Full-Screen Celebratory Pop-up Confirmation Modal */}
         {showPopupModal && bookingConfirmation && (
           <div className="fixed inset-0 z-50 overflow-y-auto bg-black/80 backdrop-blur-md flex items-center justify-center p-4 animate-fadeIn">
-            <div 
+            <div
               className="bg-white rounded-3xl overflow-hidden max-w-lg w-full shadow-2xl border-2 border-emerald-500 relative transform transition-all"
               role="dialog"
               aria-modal="true"
@@ -1036,7 +1031,7 @@ export default function ReservationSection({ preselectedProperty, onClearPresele
 
               {/* Modal Body */}
               <div className="p-6 sm:p-7 text-center">
-                
+
                 {/* Rubber Stamp */}
                 <div className="inline-flex items-center gap-2 border-3 border-red-600 bg-red-50 text-red-700 font-black text-xl sm:text-2xl px-5 py-2 rounded-xl uppercase tracking-wider transform -rotate-2 shadow-md shadow-red-500/10 mb-4 animate-bounce">
                   <CheckCircle2 className="w-6 h-6 text-red-600" />
