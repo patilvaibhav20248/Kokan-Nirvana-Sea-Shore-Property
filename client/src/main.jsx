@@ -53,8 +53,15 @@ class ErrorBoundary extends Component {
           </pre>
           <button 
             onClick={() => {
-              localStorage.removeItem('kokan_nirvana_liked_properties');
-              window.location.reload();
+              try {
+                if ('caches' in window) {
+                  caches.keys().then(names => {
+                    for (let name of names) caches.delete(name);
+                  });
+                }
+              } catch (e) {}
+              // Force fresh load bypassing cached assets
+              window.location.href = window.location.origin + window.location.pathname + '?v=' + Date.now() + window.location.hash;
             }} 
             style={{ 
               backgroundColor: '#451a03', 
@@ -68,7 +75,7 @@ class ErrorBoundary extends Component {
               boxShadow: '0 4px 12px rgba(69,26,3,0.2)'
             }}
           >
-            Reload Website
+            Reload Website (Fetch Latest Version)
           </button>
         </div>
       );
