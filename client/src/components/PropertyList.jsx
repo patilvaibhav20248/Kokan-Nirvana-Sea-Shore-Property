@@ -27,10 +27,12 @@ export default function PropertyList({
     }
   ];
 
+  const safeProperties = Array.isArray(properties) ? properties : [];
+  const safeLikedIds = Array.isArray(likedIds) ? likedIds : [];
   // If "Liked" tab is selected, filter properties to only liked ones
   const displayedProperties = activeCategory === 'Liked'
-    ? properties.filter((p) => likedIds.includes(p.id))
-    : properties;
+    ? safeProperties.filter((p) => p && safeLikedIds.includes(p.id))
+    : safeProperties;
 
   return (
     <section id="properties" className="py-20 bg-white border-t border-stone-200 scroll-mt-20">

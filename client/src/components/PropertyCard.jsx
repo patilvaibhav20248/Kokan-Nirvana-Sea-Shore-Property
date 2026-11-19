@@ -14,6 +14,8 @@ import { useFavorites } from '../context/FavoritesContext';
 
 export default function PropertyCard({ property, onSelectProperty, onBookSiteVisit, onReserveProperty }) {
   const { isLiked, toggleLike } = useFavorites();
+  if (!property) return null;
+
   const liked = isLiked(property.id);
 
   const handleLikeClick = (e) => {
@@ -21,14 +23,17 @@ export default function PropertyCard({ property, onSelectProperty, onBookSiteVis
     toggleLike(property.id);
   };
 
+  const mainImage = property.images?.[0] || 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e';
+  const highlights = Array.isArray(property.highlights) ? property.highlights : [];
+
   return (
     <div className="bg-white rounded-3xl overflow-hidden border border-stone-200 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col group relative">
       
       {/* Property Image & Status */}
       <div className="relative aspect-[16/10] overflow-hidden bg-stone-100">
         <img 
-          src={property.images[0]} 
-          alt={property.title} 
+          src={mainImage} 
+          alt={property.title || 'Kokan Nirvana Property'} 
           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
           loading="lazy"
         />
@@ -113,7 +118,7 @@ export default function PropertyCard({ property, onSelectProperty, onBookSiteVis
 
           {/* Highlights bullets */}
           <div className="space-y-1.5 mb-5 text-xs text-stone-600">
-            {property.highlights.slice(0, 2).map((h, idx) => (
+            {highlights.slice(0, 2).map((h, idx) => (
               <div key={idx} className="flex items-start gap-1.5">
                 <CheckCircle2 className="w-3.5 h-3.5 text-amber-700 shrink-0 mt-0.5" />
                 <span className="line-clamp-1">{h}</span>

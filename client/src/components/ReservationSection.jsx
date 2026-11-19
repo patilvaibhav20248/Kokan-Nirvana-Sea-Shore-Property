@@ -88,16 +88,17 @@ export default function ReservationSection({ preselectedProperty, onClearPresele
 
   // Update when parent preselects a property (e.g. from PropertyCard or Saved drawer)
   useEffect(() => {
-    if (preselectedProperty) {
+    if (preselectedProperty && preselectedProperty.title) {
+      const pTitle = String(preselectedProperty.title).toLowerCase();
       const match = availableProjects.find(
-        (p) => p.title.toLowerCase().includes(preselectedProperty.title.toLowerCase()) ||
-               preselectedProperty.title.toLowerCase().includes(p.title.toLowerCase())
+        (p) => p.title.toLowerCase().includes(pTitle) ||
+               pTitle.includes(p.title.toLowerCase())
       );
       if (match) {
         setSelectedProjectId(match.id);
-        setSelectedSpecificPlot(match.availablePlots[0] || '');
+        setSelectedSpecificPlot(match.availablePlots?.[0] || '');
       } else {
-        setSelectedSpecificPlot(preselectedProperty.title);
+        setSelectedSpecificPlot(String(preselectedProperty.title));
       }
     }
   }, [preselectedProperty]);

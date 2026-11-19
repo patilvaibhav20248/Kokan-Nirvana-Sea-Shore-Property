@@ -5,8 +5,10 @@ const FavoritesContext = createContext();
 export function FavoritesProvider({ children }) {
   const [likedIds, setLikedIds] = useState(() => {
     try {
+      if (typeof window === 'undefined' || !window.localStorage) return [];
       const saved = localStorage.getItem('kokan_nirvana_liked_properties');
-      return saved ? JSON.parse(saved) : [];
+      const parsed = saved ? JSON.parse(saved) : [];
+      return Array.isArray(parsed) ? parsed : [];
     } catch (e) {
       return [];
     }
@@ -16,34 +18,38 @@ export function FavoritesProvider({ children }) {
 
   useEffect(() => {
     try {
-      localStorage.setItem('kokan_nirvana_liked_properties', JSON.stringify(likedIds));
+      if (typeof window !== 'undefined' && window.localStorage) {
+        localStorage.setItem('kokan_nirvana_liked_properties', JSON.stringify(likedIds));
+      }
     } catch (e) {
       console.warn('Could not save favorites to localStorage', e);
     }
   }, [likedIds]);
 
   const toggleLike = (id) => {
+    if (!id) return;
     setLikedIds((prev) => {
-      const exists = prev.includes(id);
+      const list = Array.isArray(prev) ? prev : [];
+      const exists = list.includes(id);
       if (exists) {
-        return prev.filter((item) => item !== id);
+        return list.filter((item) => item !== id);
       } else {
-        return [...prev, id];
+        return [...list, id];
       }
     });
   };
 
-  const isLiked = (id) => likedIds.includes(id);
+  const isLiked = (id) => Array.isArray(likedIds) && Boolean(id) && likedIds.includes(id);
 
   const clearFavorites = () => setLikedIds([]);
 
   return (
     <FavoritesContext.Provider
       value={{
-        likedIds,
+        likedIds: Array.isArray(likedIds) ? likedIds : [],
         toggleLike,
         isLiked,
-        likedCount: likedIds.length,
+        likedCount: Array.isArray(likedIds) ? likedIds.length : 0,
         drawerOpen,
         setDrawerOpen,
         clearFavorites

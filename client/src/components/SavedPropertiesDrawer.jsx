@@ -18,7 +18,9 @@ export default function SavedPropertiesDrawer({ properties, onSelectProperty, on
 
   if (!drawerOpen) return null;
 
-  const savedList = properties.filter((p) => likedIds.includes(p.id));
+  const safeProperties = Array.isArray(properties) ? properties : [];
+  const safeLikedIds = Array.isArray(likedIds) ? likedIds : [];
+  const savedList = safeProperties.filter((p) => p && safeLikedIds.includes(p.id));
 
   const handleShareWhatsApp = () => {
     if (savedList.length === 0) return;

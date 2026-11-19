@@ -81,15 +81,20 @@ function MainApp() {
   }, []);
 
   // Filtered Properties Computation
-  const filteredProperties = properties.filter((prop) => {
+  const safeProperties = Array.isArray(properties) ? properties : [];
+  const filteredProperties = safeProperties.filter((prop) => {
+    if (!prop) return false;
+
     // 1. Category Filter
-    if (selectedCategory !== 'All' && selectedCategory !== 'Liked' && prop.category.toLowerCase() !== selectedCategory.toLowerCase()) {
-      return false;
+    if (selectedCategory !== 'All' && selectedCategory !== 'Liked') {
+      if (!prop.category || prop.category.toLowerCase() !== selectedCategory.toLowerCase()) {
+        return false;
+      }
     }
 
     // 2. Location Filter
     if (selectedLocation !== 'All') {
-      const match = prop.location.toLowerCase().includes(selectedLocation.toLowerCase());
+      const match = prop.location && prop.location.toLowerCase().includes(selectedLocation.toLowerCase());
       if (!match) return false;
     }
 
