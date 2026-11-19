@@ -68,7 +68,7 @@ export default function MasterPlanExplorer({ plots, onReservePlot, onOpenBrochur
           <div className="flex items-center gap-3">
             <span className="w-3.5 h-3.5 rounded-full bg-amber-500 shadow-sm shadow-amber-500/50"></span>
             <div>
-              <span className="text-xs text-stone-400 block font-medium">Under Token / Reserved</span>
+              <span className="text-xs text-stone-400 block font-medium">Booked / Token Hold</span>
               <span className="text-lg font-bold text-white">{reservedCount} Units</span>
             </div>
           </div>
@@ -171,7 +171,7 @@ export default function MasterPlanExplorer({ plots, onReservePlot, onOpenBrochur
                           {plot.name}
                         </span>
                         <span className={`text-[10px] font-bold uppercase px-2 py-0.5 rounded-full border ${badgeBg}`}>
-                          {plot.status}
+                          {plot.status === 'reserved' ? 'BOOKED' : plot.status}
                         </span>
                       </div>
                       

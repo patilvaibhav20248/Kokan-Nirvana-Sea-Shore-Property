@@ -150,22 +150,34 @@ export default function ContactSection({ onBookSiteVisit }) {
           {/* Direct Inquiry Form (Right, 7 Cols) */}
           <div className="lg:col-span-7 bg-stone-800/90 p-6 sm:p-8 rounded-3xl border border-stone-700">
             {submitted ? (
-              <div className="text-center py-10">
-                <div className="w-16 h-16 rounded-full bg-emerald-900/60 text-emerald-400 border border-emerald-700 flex items-center justify-center mx-auto mb-4">
-                  <CheckCircle2 className="w-10 h-10" />
+              <div className="text-center py-8 animate-fadeIn">
+                <div className="inline-flex items-center gap-2 border-2 border-emerald-500 bg-emerald-950/80 text-emerald-300 font-black text-lg px-4 py-1.5 rounded-2xl uppercase tracking-wider mb-4 shadow-md">
+                  <CheckCircle2 className="w-5 h-5 text-emerald-400" />
+                  <span>RECORDED & CONFIRMED! (नोंद झाली आहे)</span>
                 </div>
                 <h3 className="font-serif-luxury text-2xl font-bold text-white mb-2">
-                  Inquiry Received by Dapoli Desk!
+                  Request Received by Dapoli Desk!
                 </h3>
                 <p className="text-sm text-stone-300 max-w-md mx-auto mb-6">
-                  Thank you, <span className="font-bold text-white">{form.name}</span>. Our Dapoli property manager will call you at <span className="font-bold text-white">{form.phone}</span> with the plot layout and 7/12 extract copy.
+                  Thank you, <strong className="text-white">{form.name}</strong>. Your inquiry and plot preference have been recorded. Our senior Dapoli manager Sagar Kadam will call you at <strong className="text-white">{form.phone}</strong> with the 7/12 extract and sanctioned layout map.
                 </p>
-                <button
-                  onClick={() => setSubmitted(false)}
-                  className="px-5 py-2.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-stone-950 font-bold text-xs"
-                >
-                  Send Another Inquiry
-                </button>
+                <div className="flex justify-center gap-3">
+                  <a
+                    href={`https://wa.me/919820012345?text=Hello%20Kokan%20Nirvana%20team,%20I%20have%20submitted%20an%20inquiry%20for%20${encodeURIComponent(form.interestedCategory)}.`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs flex items-center gap-2"
+                  >
+                    <MessageCircle className="w-4 h-4" />
+                    <span>WhatsApp Site Desk</span>
+                  </a>
+                  <button
+                    onClick={() => setSubmitted(false)}
+                    className="px-5 py-2.5 rounded-xl bg-stone-700 hover:bg-stone-600 text-white font-bold text-xs cursor-pointer"
+                  >
+                    Submit Another
+                  </button>
+                </div>
               </div>
             ) : (
               <div>

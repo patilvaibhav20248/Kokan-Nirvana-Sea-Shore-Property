@@ -76,22 +76,34 @@ export default function VipSiteVisitModal({ property, onClose }) {
         {/* Content */}
         <div className="p-6 sm:p-8">
           {submitted ? (
-            <div className="text-center py-8">
-              <div className="w-16 h-16 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto mb-4">
-                <CheckCircle2 className="w-10 h-10" />
+            <div className="text-center py-6 animate-fadeIn">
+              <div className="inline-flex items-center gap-2 border-4 border-emerald-600 bg-emerald-50 text-emerald-800 font-black text-xl sm:text-2xl px-5 py-2 rounded-2xl uppercase tracking-wider mb-4 shadow-md">
+                <CheckCircle2 className="w-6 h-6 text-emerald-600" />
+                <span>BOOKED & CONFIRMED! (आरक्षित)</span>
               </div>
               <h4 className="font-serif-luxury text-2xl font-bold text-stone-900 mb-2">
-                VIP Site Visit Confirmed!
+                VIP Site Visit Successfully Booked!
               </h4>
               <p className="text-sm text-stone-600 max-w-md mx-auto mb-6">
-                Thank you, <span className="font-bold text-stone-900">{form.name}</span>. Our Dapoli hospitality concierge will contact you at <span className="font-bold text-stone-900">{form.phone}</span> to coordinate your route, timings, and arrange complimentary Konkani refreshments.
+                Thank you, <strong className="text-stone-900">{form.name}</strong>. Your complimentary VIP site inspection is officially <strong>BOOKED</strong>. Our Dapoli hospitality concierge will contact you at <strong className="text-stone-900">{form.phone}</strong> to coordinate your Khed station pickup and refreshments.
               </p>
-              <button
-                onClick={onClose}
-                className="px-6 py-2.5 rounded-xl bg-teal-800 text-white font-bold text-xs"
-              >
-                Close Window
-              </button>
+              <div className="flex justify-center gap-3">
+                <a
+                  href={`https://wa.me/919820012345?text=Hello%20Kokan%20Nirvana%20team,%20I%20have%20booked%20a%20VIP%20site%20visit%20for%20${encodeURIComponent(form.propertyName || 'Dapoli Projects')}.`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="px-5 py-2.5 rounded-xl bg-emerald-700 hover:bg-emerald-600 text-white font-bold text-xs flex items-center gap-2"
+                >
+                  <MessageCircle className="w-4 h-4" />
+                  <span>Confirm on WhatsApp</span>
+                </a>
+                <button
+                  onClick={onClose}
+                  className="px-6 py-2.5 rounded-xl bg-stone-900 text-white font-bold text-xs hover:bg-stone-800 transition-colors cursor-pointer"
+                >
+                  Done
+                </button>
+              </div>
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="space-y-4">

@@ -832,149 +832,170 @@ export default function ReservationSection({ preselectedProperty, onClearPresele
 
         {/* Step 4: Official Digital Pass & Next Steps Roadmap */}
         {currentStep === 4 && bookingConfirmation && (
-          <div className="max-w-4xl mx-auto bg-white rounded-3xl overflow-hidden border border-emerald-300 shadow-2xl p-6 sm:p-10 animate-fadeIn">
+          <div className="max-w-4xl mx-auto bg-white rounded-3xl overflow-hidden border-2 border-emerald-400 shadow-2xl animate-fadeIn">
             
-            {/* Pass Header */}
-            <div className="text-center pb-6 border-b border-stone-200">
-              <div className="w-16 h-16 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center mx-auto mb-3">
-                <CheckCircle2 className="w-10 h-10" />
-              </div>
-              <span className="px-3.5 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800 inline-block mb-1">
-                Step 4 of 4: Reservation Active • Pass Issued
-              </span>
-              <h3 className="font-serif-luxury text-2xl sm:text-3xl lg:text-4xl font-bold text-stone-900 mt-2">
-                Booking Reference: {bookingConfirmation.reservationId}
-              </h3>
-              <p className="text-xs sm:text-sm text-stone-600 mt-1">
-                Your reservation has been recorded in the Dapoli site registry for <strong className="text-stone-900">{bookingConfirmation.fullName}</strong>.
-              </p>
+            {/* Top Celebratory Header Bar */}
+            <div className="bg-gradient-to-r from-emerald-800 via-teal-900 to-emerald-950 text-white text-center py-3.5 px-4 font-black uppercase tracking-widest text-xs sm:text-sm flex items-center justify-center gap-2 shadow-inner border-b border-emerald-700">
+              <Sparkles className="w-4 h-4 text-amber-300 animate-spin" />
+              <span>OFFICIAL ALLOCATION: PLOT STATUS IS BOOKED & RESERVED</span>
+              <span className="hidden sm:inline">• प्लॉट आरक्षित झाला आहे!</span>
+              <Sparkles className="w-4 h-4 text-amber-300 animate-spin" />
             </div>
 
-            {/* Voucher Details Table */}
-            <div className="my-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 text-xs bg-stone-50 p-5 rounded-2xl border border-stone-200">
-              <div>
-                <span className="text-stone-400 uppercase font-bold block text-[10px]">Project & Location</span>
-                <span className="font-bold text-stone-900 text-sm">{bookingConfirmation.projectTitle}</span>
-                <span className="text-stone-500 block">{bookingConfirmation.location}</span>
-              </div>
+            <div className="p-6 sm:p-10">
+              {/* Giant Celebratory Stamp Header */}
+              <div className="text-center pb-8 border-b border-stone-200">
+                
+                {/* Official Rubber Stamp */}
+                <div className="inline-flex items-center gap-2.5 border-4 border-red-600 bg-red-50 text-red-700 font-black text-2xl sm:text-4xl px-6 py-2.5 rounded-2xl uppercase tracking-wider transform -rotate-2 shadow-lg shadow-red-600/10 mb-4 animate-bounce">
+                  <CheckCircle2 className="w-7 h-7 sm:w-9 sm:h-9 text-red-600" />
+                  <span>BOOKED / आरक्षित</span>
+                </div>
 
-              <div>
-                <span className="text-stone-400 uppercase font-bold block text-[10px]">Allocated Plot & Size</span>
-                <span className="font-bold text-stone-900 text-sm">{bookingConfirmation.specificPlot}</span>
-                <span className="text-emerald-700 font-semibold block">{bookingConfirmation.plotSize}</span>
-              </div>
-
-              <div>
-                <span className="text-stone-400 uppercase font-bold block text-[10px]">Reservation Status</span>
-                <span className="font-bold text-amber-900 block text-sm">
-                  {bookingConfirmation.reservationType === 'token' ? '14-Day Priority Plot Freeze' : 'VIP Site Inspection'}
-                </span>
-                <span className="text-[11px] text-emerald-700 font-semibold">100% Refundable Guarantee</span>
-              </div>
-
-              <div>
-                <span className="text-stone-400 uppercase font-bold block text-[10px]">Scheduled Visit Date</span>
-                <span className="font-bold text-stone-900 text-sm">{bookingConfirmation.preferredDate}</span>
-                <span className="text-stone-500 block">{bookingConfirmation.timeSlot}</span>
-              </div>
-
-              <div>
-                <span className="text-stone-400 uppercase font-bold block text-[10px]">Travel Pickup Choice</span>
-                <span className="font-semibold text-stone-800 text-sm">{bookingConfirmation.pickupOption}</span>
-              </div>
-
-              <div>
-                <span className="text-stone-400 uppercase font-bold block text-[10px]">Assigned Site Operations Lead</span>
-                <span className="font-bold text-stone-900 text-sm">Sagar Kadam</span>
-                <span className="text-emerald-700 font-semibold block">+91 98200 12345</span>
-              </div>
-            </div>
-
-            {/* Interactive "What Happens Next" 4-Step Roadmap */}
-            <div className="my-8 bg-amber-50/70 border border-amber-200 rounded-3xl p-6">
-              <h4 className="font-serif-luxury text-lg font-bold text-amber-950 mb-3 flex items-center gap-2">
-                <Compass className="w-5 h-5 text-amber-800" />
-                <span>Your Next Steps Journey:</span>
-              </h4>
-
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-4 text-xs">
-                <div className="bg-white p-3.5 rounded-2xl border border-amber-200/80 shadow-2xs">
-                  <div className="w-6 h-6 rounded-full bg-emerald-600 text-white font-bold text-[11px] flex items-center justify-center mb-2">
-                    ✓
+                <div className="max-w-2xl mx-auto">
+                  <h3 className="font-serif-luxury text-2xl sm:text-4xl lg:text-5xl font-black text-stone-900 tracking-tight">
+                    Congratulations, {bookingConfirmation.fullName}!
+                  </h3>
+                  <div className="mt-2 text-base sm:text-xl font-bold text-emerald-800">
+                    Your Plot <span className="px-2.5 py-0.5 rounded-lg bg-amber-100 text-amber-950 border border-amber-300 font-black">{bookingConfirmation.specificPlot}</span> is Officially BOOKED!
                   </div>
-                  <strong className="block text-stone-900 font-bold mb-1">Step 1: Pass Logged</strong>
-                  <p className="text-stone-500 leading-snug">
-                    Your digital pass is securely synchronized with our backend registry.
+                  <p className="text-xs sm:text-sm text-stone-600 mt-2">
+                    Official Booking Reference ID: <strong className="font-mono text-stone-900 bg-stone-100 px-2.5 py-1 rounded-md border border-stone-300">{bookingConfirmation.reservationId}</strong>
                   </p>
                 </div>
 
-                <div className="bg-white p-3.5 rounded-2xl border border-amber-200/80 shadow-2xs">
-                  <div className="w-6 h-6 rounded-full bg-amber-800 text-white font-bold text-[11px] flex items-center justify-center mb-2">
-                    2
-                  </div>
-                  <strong className="block text-stone-900 font-bold mb-1">Step 2: Manager Call</strong>
-                  <p className="text-stone-500 leading-snug">
-                    Sagar Kadam will call your WhatsApp to confirm your travel timings.
-                  </p>
-                </div>
-
-                <div className="bg-white p-3.5 rounded-2xl border border-amber-200/80 shadow-2xs">
-                  <div className="w-6 h-6 rounded-full bg-amber-800 text-white font-bold text-[11px] flex items-center justify-center mb-2">
-                    3
-                  </div>
-                  <strong className="block text-stone-900 font-bold mb-1">Step 3: GPS Pin Sent</strong>
-                  <p className="text-stone-500 leading-snug">
-                    Receive direct Google Maps coordinates & Konkani hospitality voucher.
-                  </p>
-                </div>
-
-                <div className="bg-white p-3.5 rounded-2xl border border-amber-200/80 shadow-2xs">
-                  <div className="w-6 h-6 rounded-full bg-amber-800 text-white font-bold text-[11px] flex items-center justify-center mb-2">
-                    4
-                  </div>
-                  <strong className="block text-stone-900 font-bold mb-1">Step 4: Station Escort</strong>
-                  <p className="text-stone-500 leading-snug">
-                    Private pickup from Khed Railway Station to site office with local lunch.
-                  </p>
+                <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-100 text-emerald-900 border border-emerald-300 font-extrabold text-xs mt-4">
+                  <span className="w-2.5 h-2.5 rounded-full bg-emerald-600 animate-ping"></span>
+                  <span>LIVE STATUS: BOOKED (14-DAY PRIORITY TITLE FREEZE ACTIVE)</span>
                 </div>
               </div>
+
+              {/* Voucher Details Table */}
+              <div className="my-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 text-xs bg-stone-50 p-6 rounded-2xl border border-stone-200">
+                <div className="bg-white p-3.5 rounded-xl border border-stone-200/80">
+                  <span className="text-stone-400 uppercase font-bold block text-[10px]">Project & Location</span>
+                  <span className="font-bold text-stone-900 text-sm block mt-0.5">{bookingConfirmation.projectTitle}</span>
+                  <span className="text-stone-500 block">{bookingConfirmation.location}</span>
+                </div>
+
+                <div className="bg-white p-3.5 rounded-xl border border-stone-200/80">
+                  <span className="text-stone-400 uppercase font-bold block text-[10px]">Allocated Plot & Size</span>
+                  <span className="font-black text-stone-900 text-sm block mt-0.5">{bookingConfirmation.specificPlot}</span>
+                  <span className="text-emerald-700 font-semibold block">{bookingConfirmation.plotSize}</span>
+                </div>
+
+                <div className="bg-white p-3.5 rounded-xl border border-stone-200/80">
+                  <span className="text-stone-400 uppercase font-bold block text-[10px]">Booking Status</span>
+                  <span className="font-black text-red-600 text-sm block mt-0.5">
+                    ● BOOKED (आरक्षित)
+                  </span>
+                  <span className="text-[11px] text-emerald-700 font-semibold">100% Refundable Guarantee</span>
+                </div>
+
+                <div className="bg-white p-3.5 rounded-xl border border-stone-200/80">
+                  <span className="text-stone-400 uppercase font-bold block text-[10px]">Scheduled Visit Date</span>
+                  <span className="font-bold text-stone-900 text-sm block mt-0.5">{bookingConfirmation.preferredDate}</span>
+                  <span className="text-stone-500 block">{bookingConfirmation.timeSlot}</span>
+                </div>
+
+                <div className="bg-white p-3.5 rounded-xl border border-stone-200/80">
+                  <span className="text-stone-400 uppercase font-bold block text-[10px]">Travel Pickup Arranged</span>
+                  <span className="font-semibold text-stone-800 text-sm block mt-0.5">{bookingConfirmation.pickupOption}</span>
+                </div>
+
+                <div className="bg-white p-3.5 rounded-xl border border-stone-200/80">
+                  <span className="text-stone-400 uppercase font-bold block text-[10px]">Assigned Site Operations Lead</span>
+                  <span className="font-bold text-stone-900 text-sm block mt-0.5">Sagar Kadam</span>
+                  <span className="text-emerald-700 font-semibold block">+91 98200 12345</span>
+                </div>
+              </div>
+
+              {/* Interactive "What Happens Next" 4-Step Roadmap */}
+              <div className="my-8 bg-amber-50/70 border border-amber-200 rounded-3xl p-6 sm:p-7">
+                <h4 className="font-serif-luxury text-xl font-bold text-amber-950 mb-3 flex items-center gap-2">
+                  <Compass className="w-5 h-5 text-amber-800" />
+                  <span>Your Post-Booking Next Steps Roadmap:</span>
+                </h4>
+
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-4 text-xs">
+                  <div className="bg-white p-4 rounded-2xl border border-amber-200/80 shadow-2xs">
+                    <div className="w-7 h-7 rounded-full bg-emerald-600 text-white font-bold text-xs flex items-center justify-center mb-2">
+                      ✓
+                    </div>
+                    <strong className="block text-stone-900 font-bold mb-1">Step 1: Plot Booked</strong>
+                    <p className="text-stone-500 leading-snug">
+                      Plot is officially frozen in the land registry queue for 14 days under your name.
+                    </p>
+                  </div>
+
+                  <div className="bg-white p-4 rounded-2xl border border-amber-200/80 shadow-2xs">
+                    <div className="w-7 h-7 rounded-full bg-amber-800 text-white font-bold text-xs flex items-center justify-center mb-2">
+                      2
+                    </div>
+                    <strong className="block text-stone-900 font-bold mb-1">Step 2: Manager Call</strong>
+                    <p className="text-stone-500 leading-snug">
+                      Sagar Kadam will call your WhatsApp to coordinate arrival time & train pickup.
+                    </p>
+                  </div>
+
+                  <div className="bg-white p-4 rounded-2xl border border-amber-200/80 shadow-2xs">
+                    <div className="w-7 h-7 rounded-full bg-amber-800 text-white font-bold text-xs flex items-center justify-center mb-2">
+                      3
+                    </div>
+                    <strong className="block text-stone-900 font-bold mb-1">Step 3: GPS Pin & Pass</strong>
+                    <p className="text-stone-500 leading-snug">
+                      Receive Google Maps live pin & complimentary Konkani hospitality lunch voucher.
+                    </p>
+                  </div>
+
+                  <div className="bg-white p-4 rounded-2xl border border-amber-200/80 shadow-2xs">
+                    <div className="w-7 h-7 rounded-full bg-amber-800 text-white font-bold text-xs flex items-center justify-center mb-2">
+                      4
+                    </div>
+                    <strong className="block text-stone-900 font-bold mb-1">Step 4: Site Tour & 7/12</strong>
+                    <p className="text-stone-500 leading-snug">
+                      Private car escort from Khed Station to your plot and 7/12 extract verification.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="flex flex-wrap gap-3.5 justify-center pt-2">
+                <button
+                  type="button"
+                  onClick={handlePrint}
+                  className="px-6 py-3.5 rounded-xl border border-stone-300 hover:bg-stone-50 text-stone-800 font-bold text-xs flex items-center gap-2 cursor-pointer transition-colors shadow-2xs"
+                >
+                  <Printer className="w-4 h-4 text-stone-600" />
+                  <span>Print / Save Booking Pass</span>
+                </button>
+
+                <a
+                  href={`https://wa.me/919820012345?text=Hello%20Kokan%20Nirvana%20team,%20I%20have%20completed%20booking%20${bookingConfirmation.reservationId}%20for%20${encodeURIComponent(bookingConfirmation.specificPlot)}%20at%20${encodeURIComponent(bookingConfirmation.projectTitle)}.%20Please%20confirm%20my%20reservation.`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="px-6 py-3.5 rounded-xl bg-emerald-700 hover:bg-emerald-600 text-white font-bold text-xs flex items-center gap-2 cursor-pointer transition-colors shadow-md"
+                >
+                  <MessageCircle className="w-4 h-4" />
+                  <span>Send Confirmation to WhatsApp</span>
+                </a>
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    setBookingConfirmation(null);
+                    setCurrentStep(1);
+                    scrollToSectionHeader();
+                  }}
+                  className="px-6 py-3.5 rounded-xl bg-stone-900 hover:bg-stone-800 text-white font-bold text-xs flex items-center gap-2 cursor-pointer transition-colors"
+                >
+                  <RefreshCw className="w-3.5 h-3.5" />
+                  <span>Book Another Plot</span>
+                </button>
+              </div>
+
             </div>
-
-            {/* Action Buttons */}
-            <div className="flex flex-wrap gap-3 justify-center pt-2">
-              <button
-                type="button"
-                onClick={handlePrint}
-                className="px-6 py-3 rounded-xl border border-stone-300 hover:bg-stone-50 text-stone-800 font-bold text-xs flex items-center gap-2 cursor-pointer transition-colors shadow-2xs"
-              >
-                <Printer className="w-4 h-4 text-stone-600" />
-                <span>Print / Save Digital Pass</span>
-              </button>
-
-              <a
-                href={`https://wa.me/919820012345?text=Hello%20Kokan%20Nirvana%20team,%20I%20have%20completed%20reservation%20${bookingConfirmation.reservationId}%20for%20${encodeURIComponent(bookingConfirmation.projectTitle)}.%20Please%20confirm%20my%20site%20visit.`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="px-6 py-3 rounded-xl bg-emerald-700 hover:bg-emerald-600 text-white font-bold text-xs flex items-center gap-2 cursor-pointer transition-colors shadow-sm"
-              >
-                <MessageCircle className="w-4 h-4" />
-                <span>Send to WhatsApp Concierge</span>
-              </a>
-
-              <button
-                type="button"
-                onClick={() => {
-                  setBookingConfirmation(null);
-                  setCurrentStep(1);
-                  scrollToSectionHeader();
-                }}
-                className="px-6 py-3 rounded-xl bg-stone-900 hover:bg-stone-800 text-white font-bold text-xs flex items-center gap-2 cursor-pointer transition-colors"
-              >
-                <RefreshCw className="w-3.5 h-3.5" />
-                <span>Make Another Reservation</span>
-              </button>
-            </div>
-
           </div>
         )}
 
