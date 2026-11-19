@@ -13,6 +13,7 @@ import {
   UserCheck
 } from 'lucide-react';
 import { submitInquiry } from '../firebase/firebaseService';
+import { cleanPhoneNumber, formatDisplayPhone } from '../utils/whatsappHelper';
 
 export default function ContactSection({ onBookSiteVisit }) {
   const [form, setForm] = useState({
@@ -158,24 +159,56 @@ export default function ContactSection({ onBookSiteVisit }) {
                 <h3 className="font-serif-luxury text-2xl font-bold text-white mb-2">
                   Request Received by Dapoli Desk!
                 </h3>
-                <p className="text-sm text-stone-300 max-w-md mx-auto mb-6">
-                  Thank you, <strong className="text-white">{form.name}</strong>. Your inquiry and plot preference have been recorded. Our senior Dapoli manager Sagar Kadam will call you at <strong className="text-white">{form.phone}</strong> with the 7/12 extract and sanctioned layout map.
+                <p className="text-sm text-stone-300 max-w-md mx-auto mb-4">
+                  Thank you, <strong className="text-white">{form.name}</strong>. Your inquiry and plot preference have been recorded.
                 </p>
-                <div className="flex justify-center gap-3">
+
+                {/* WhatsApp Status Card */}
+                <div className="bg-stone-900/90 border border-emerald-500/40 rounded-2xl p-4 max-w-md mx-auto mb-6 text-left flex items-center justify-between gap-3">
+                  <div className="flex items-center gap-2.5">
+                    <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping shrink-0"></span>
+                    <div>
+                      <span className="text-[11px] font-bold text-emerald-300 block">Confirmation Ready on WhatsApp:</span>
+                      <span className="font-mono text-white text-xs font-bold">{formatDisplayPhone(form.phone)}</span>
+                    </div>
+                  </div>
+                  <a
+                    href={`https://api.whatsapp.com/send?phone=${cleanPhoneNumber(form.phone)}&text=${encodeURIComponent(`🌴 *Kokan Nirvana Dapoli - Inquiry Confirmation* 🌴\n\nDear *${form.name}*,\nThank you for reaching out regarding *${form.interestedCategory}* in Dapoli!\n\nOur team has received your inquiry for budget *${form.budget}*. Our senior manager will assist you with verified 7/12 land records.\n\n📞 Office: +91 98200 12345\n📍 Murud Beach Road Junction, Dapoli`)}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="px-3.5 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs flex items-center gap-1 shrink-0"
+                  >
+                    <MessageCircle className="w-3.5 h-3.5" />
+                    <span>Open</span>
+                  </a>
+                </div>
+
+                <div className="flex flex-col sm:flex-row justify-center gap-3">
+                  <a
+                    href={`https://api.whatsapp.com/send?phone=${cleanPhoneNumber(form.phone)}&text=${encodeURIComponent(`🌴 *Kokan Nirvana Dapoli - Inquiry Confirmation* 🌴\n\nDear *${form.name}*,\nThank you for reaching out regarding *${form.interestedCategory}* in Dapoli!\n\nOur team has received your inquiry for budget *${form.budget}*. Our senior manager will assist you with verified 7/12 land records.\n\n📞 Office: +91 98200 12345\n📍 Murud Beach Road Junction, Dapoli`)}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-sm"
+                  >
+                    <MessageCircle className="w-4 h-4" />
+                    <span>Receive on My WhatsApp</span>
+                  </a>
+
                   <a
                     href={`https://wa.me/919820012345?text=Hello%20Kokan%20Nirvana%20team,%20I%20have%20submitted%20an%20inquiry%20for%20${encodeURIComponent(form.interestedCategory)}.`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs flex items-center gap-2"
+                    className="px-5 py-2.5 rounded-xl border border-stone-600 hover:bg-stone-700 text-stone-200 font-bold text-xs flex items-center justify-center gap-2"
                   >
-                    <MessageCircle className="w-4 h-4" />
-                    <span>WhatsApp Site Desk</span>
+                    <Phone className="w-3.5 h-3.5 text-amber-400" />
+                    <span>Office Desk</span>
                   </a>
+
                   <button
                     onClick={() => setSubmitted(false)}
                     className="px-5 py-2.5 rounded-xl bg-stone-700 hover:bg-stone-600 text-white font-bold text-xs cursor-pointer"
                   >
-                    Submit Another
+                    Done
                   </button>
                 </div>
               </div>

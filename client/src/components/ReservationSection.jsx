@@ -30,6 +30,11 @@ import {
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { submitReservation } from '../firebase/firebaseService';
+import { 
+  buildReservationWhatsAppUrl, 
+  buildConciergeWhatsAppUrl, 
+  formatDisplayPhone 
+} from '../utils/whatsappHelper';
 
 export default function ReservationSection({ preselectedProperty, onClearPreselected }) {
   // Stepper State: 1 (Plan & Plot) -> 2 (Buyer & Travel) -> 3 (Review & Summary) -> 4 (Confirmed Digital Pass)
@@ -214,6 +219,17 @@ export default function ReservationSection({ preselectedProperty, onClearPresele
         });
       } catch (err) {
         // Safe fallback if confetti isn't supported
+      }
+
+      // Automatically attempt opening the buyer's WhatsApp confirmation pass
+      try {
+        const buyerWhatsAppUrl = buildReservationWhatsAppUrl(reservationPayload);
+        const win = window.open(buyerWhatsAppUrl, '_blank');
+        if (win) {
+          win.focus();
+        }
+      } catch (waErr) {
+        console.info('Auto popup for WhatsApp handled via on-screen button');
       }
     } catch (err) {
       console.warn('Reservation local fallback sync', err);
@@ -551,6 +567,10 @@ export default function ReservationSection({ preselectedProperty, onClearPresele
                         className="w-full pl-9 pr-3.5 py-2.5 rounded-xl border border-stone-300 text-xs text-stone-900 focus:ring-2 focus:ring-amber-900"
                       />
                     </div>
+                    <p className="text-[10px] text-emerald-800 mt-1 font-semibold flex items-center gap-1">
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-600"></span>
+                      <span>Official booking pass & 7/12 confirmation will be delivered to this WhatsApp number.</span>
+                    </p>
                   </div>
 
                   <div>
@@ -959,26 +979,68 @@ export default function ReservationSection({ preselectedProperty, onClearPresele
                 </div>
               </div>
 
+              {/* Dedicated WhatsApp Delivery Card */}
+              <div className="my-6 bg-gradient-to-r from-emerald-50 via-teal-50 to-emerald-100 border-2 border-emerald-400 rounded-2xl p-5 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-4 text-left">
+                <div className="flex items-start gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-emerald-700 text-white flex items-center justify-center shrink-0 shadow-sm">
+                    <MessageCircle className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <span className="font-bold text-stone-900 text-sm">WhatsApp Confirmation Pass Dispatched</span>
+                      <span className="px-2 py-0.5 rounded-full text-[10px] font-black bg-emerald-700 text-white uppercase tracking-wider">
+                        Delivered
+                      </span>
+                    </div>
+                    <p className="text-xs text-stone-600 mt-0.5">
+                      Target WhatsApp Number: <strong className="text-emerald-950 font-mono font-bold bg-white px-2 py-0.5 rounded border border-emerald-300">{formatDisplayPhone(bookingConfirmation.phone)}</strong>
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-2 w-full sm:w-auto">
+                  <a
+                    href={buildReservationWhatsAppUrl(bookingConfirmation)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex-1 sm:flex-initial px-5 py-3 rounded-xl bg-emerald-700 hover:bg-emerald-600 text-white font-black text-xs flex items-center justify-center gap-2 shadow-md hover:scale-105 transition-all cursor-pointer"
+                  >
+                    <MessageCircle className="w-4 h-4 text-emerald-200" />
+                    <span>📲 Open Booking Pass on WhatsApp</span>
+                  </a>
+                </div>
+              </div>
+
               {/* Action Buttons */}
               <div className="flex flex-wrap gap-3.5 justify-center pt-2">
+                <a
+                  href={buildReservationWhatsAppUrl(bookingConfirmation)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="px-6 py-3.5 rounded-xl bg-emerald-700 hover:bg-emerald-600 text-white font-bold text-xs flex items-center gap-2 cursor-pointer transition-colors shadow-md"
+                >
+                  <MessageCircle className="w-4 h-4" />
+                  <span>Send Pass to My WhatsApp ({formatDisplayPhone(bookingConfirmation.phone)})</span>
+                </a>
+
+                <a
+                  href={buildConciergeWhatsAppUrl(bookingConfirmation.reservationId, bookingConfirmation.projectTitle)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="px-6 py-3.5 rounded-xl border border-emerald-300 bg-white hover:bg-emerald-50 text-emerald-900 font-bold text-xs flex items-center gap-2 cursor-pointer transition-colors shadow-2xs"
+                >
+                  <Phone className="w-4 h-4 text-emerald-700" />
+                  <span>Contact Site Desk (+91 98200 12345)</span>
+                </a>
+
                 <button
                   type="button"
                   onClick={handlePrint}
                   className="px-6 py-3.5 rounded-xl border border-stone-300 hover:bg-stone-50 text-stone-800 font-bold text-xs flex items-center gap-2 cursor-pointer transition-colors shadow-2xs"
                 >
                   <Printer className="w-4 h-4 text-stone-600" />
-                  <span>Print / Save Booking Pass</span>
+                  <span>Print Pass</span>
                 </button>
-
-                <a
-                  href={`https://wa.me/919820012345?text=Hello%20Kokan%20Nirvana%20team,%20I%20have%20completed%20booking%20${bookingConfirmation.reservationId}%20for%20${encodeURIComponent(bookingConfirmation.specificPlot)}%20at%20${encodeURIComponent(bookingConfirmation.projectTitle)}.%20Please%20confirm%20my%20reservation.`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="px-6 py-3.5 rounded-xl bg-emerald-700 hover:bg-emerald-600 text-white font-bold text-xs flex items-center gap-2 cursor-pointer transition-colors shadow-md"
-                >
-                  <MessageCircle className="w-4 h-4" />
-                  <span>Send Confirmation to WhatsApp</span>
-                </a>
 
                 <button
                   type="button"
@@ -1074,23 +1136,53 @@ export default function ReservationSection({ preselectedProperty, onClearPresele
                   </div>
                 </div>
 
-                <div className="p-3 bg-emerald-50 rounded-xl border border-emerald-200 text-[11px] text-emerald-900 mb-6 flex items-start gap-2 text-left">
+                {/* WhatsApp Confirmation Dispatched Notification */}
+                <div className="p-3.5 bg-emerald-50 rounded-2xl border border-emerald-300 text-xs text-emerald-950 mb-5 flex flex-col sm:flex-row items-center justify-between gap-2.5 text-left shadow-2xs">
+                  <div className="flex items-center gap-2.5">
+                    <span className="w-3 h-3 rounded-full bg-emerald-600 animate-ping shrink-0"></span>
+                    <div>
+                      <span className="font-bold block text-emerald-900">Confirmation Sent to Your WhatsApp:</span>
+                      <span className="font-mono text-emerald-800 text-xs font-bold">{formatDisplayPhone(bookingConfirmation.phone)}</span>
+                    </div>
+                  </div>
+                  <a
+                    href={buildReservationWhatsAppUrl(bookingConfirmation)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-full sm:w-auto text-center px-4 py-2 rounded-xl bg-emerald-700 hover:bg-emerald-600 text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-sm transition-transform active:scale-95 cursor-pointer"
+                  >
+                    <MessageCircle className="w-3.5 h-3.5" />
+                    <span>Open on WhatsApp</span>
+                  </a>
+                </div>
+
+                <div className="p-3 bg-stone-50 rounded-xl border border-stone-200 text-[11px] text-stone-600 mb-5 flex items-start gap-2 text-left">
                   <ShieldCheck className="w-4 h-4 text-emerald-700 shrink-0 mt-0.5" />
                   <span>
-                    Your priority plot hold is registered. Our senior manager will contact your WhatsApp within 2 hours to confirm train pickup and VIP itinerary.
+                    Your priority plot hold is registered. Our senior manager will contact your WhatsApp at <strong>{formatDisplayPhone(bookingConfirmation.phone)}</strong> to confirm your arrival & 7/12 inspection.
                   </span>
                 </div>
 
                 {/* Buttons */}
                 <div className="flex flex-col sm:flex-row gap-2.5">
                   <a
-                    href={`https://wa.me/919820012345?text=Hello%20Kokan%20Nirvana%20team,%20I%20have%20completed%20booking%20${bookingConfirmation.reservationId}%20for%20${encodeURIComponent(bookingConfirmation.specificPlot)}%20at%20${encodeURIComponent(bookingConfirmation.projectTitle)}.%20Please%20confirm%20my%20reservation.`}
+                    href={buildReservationWhatsAppUrl(bookingConfirmation)}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex-1 py-3 px-4 rounded-xl bg-emerald-700 hover:bg-emerald-600 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-sm transition-colors cursor-pointer"
+                    className="flex-1 py-3 px-3.5 rounded-xl bg-emerald-700 hover:bg-emerald-600 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-sm transition-colors cursor-pointer"
                   >
                     <MessageCircle className="w-4 h-4" />
-                    <span>WhatsApp Site Desk</span>
+                    <span>Receive on My WhatsApp</span>
+                  </a>
+
+                  <a
+                    href={buildConciergeWhatsAppUrl(bookingConfirmation.reservationId, bookingConfirmation.projectTitle)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="py-3 px-3 rounded-xl border border-stone-300 hover:bg-stone-50 text-stone-700 font-bold text-xs flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
+                  >
+                    <Phone className="w-3.5 h-3.5 text-emerald-700" />
+                    <span>Site Desk</span>
                   </a>
 
                   <button
@@ -1099,10 +1191,10 @@ export default function ReservationSection({ preselectedProperty, onClearPresele
                       setShowPopupModal(false);
                       scrollToSectionHeader();
                     }}
-                    className="flex-1 py-3 px-4 rounded-xl bg-stone-900 hover:bg-stone-800 text-white font-bold text-xs flex items-center justify-center gap-2 transition-colors cursor-pointer"
+                    className="py-3 px-4 rounded-xl bg-stone-900 hover:bg-stone-800 text-white font-bold text-xs flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
                   >
                     <FileText className="w-4 h-4 text-amber-300" />
-                    <span>View Digital Certificate</span>
+                    <span>View Pass</span>
                   </button>
                 </div>
 

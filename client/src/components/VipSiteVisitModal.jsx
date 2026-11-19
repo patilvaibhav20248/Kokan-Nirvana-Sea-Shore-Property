@@ -13,10 +13,12 @@ import {
   Coffee,
   ShieldCheck,
   MessageCircle,
-  Ticket
+  Ticket,
+  Phone
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { submitSiteVisit } from '../firebase/firebaseService';
+import { buildSiteVisitWhatsAppUrl, buildConciergeWhatsAppUrl, formatDisplayPhone } from '../utils/whatsappHelper';
 
 export default function VipSiteVisitModal({ property, onClose }) {
   const [form, setForm] = useState({
@@ -56,6 +58,17 @@ export default function VipSiteVisitModal({ property, onClose }) {
           origin: { y: 0.6 }
         });
       } catch (e) {}
+
+      // Automatically attempt opening the visitor's WhatsApp confirmation pass
+      try {
+        const waPassUrl = buildSiteVisitWhatsAppUrl({ ...form, refCode });
+        const win = window.open(waPassUrl, '_blank');
+        if (win) {
+          win.focus();
+        }
+      } catch (waErr) {
+        console.info('Auto popup for WhatsApp handled via on-screen button');
+      }
     }
   };
 
@@ -140,19 +153,50 @@ export default function VipSiteVisitModal({ property, onClose }) {
                 </div>
               </div>
 
-              <div className="flex flex-col sm:flex-row justify-center gap-3 max-w-md mx-auto">
+              {/* WhatsApp VIP Pass Dispatched Status Card */}
+              <div className="bg-emerald-50 border border-emerald-300 rounded-2xl p-3.5 max-w-md mx-auto text-left mb-4 shadow-2xs flex items-center justify-between gap-3">
+                <div className="flex items-center gap-2.5">
+                  <span className="w-2.5 h-2.5 rounded-full bg-emerald-600 animate-ping shrink-0"></span>
+                  <div>
+                    <span className="text-[11px] font-bold text-emerald-950 block">Pass Sent to Your WhatsApp:</span>
+                    <span className="font-mono text-emerald-900 text-xs font-bold">{formatDisplayPhone(form.phone)}</span>
+                  </div>
+                </div>
                 <a
-                  href={`https://wa.me/919820012345?text=Hello%20Kokan%20Nirvana%20team,%20I%20have%20booked%20VIP%20site%20visit%20Pass%20${bookingRef || 'VIP'}.%20Name:%20${encodeURIComponent(form.name)}.%20Property:%20${encodeURIComponent(form.propertyName || 'Dapoli Projects')}.`}
+                  href={buildSiteVisitWhatsAppUrl({ ...form, refCode: bookingRef })}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="px-5 py-3 rounded-xl bg-emerald-700 hover:bg-emerald-600 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-lg shadow-emerald-950/10 cursor-pointer"
+                  className="px-3 py-1.5 rounded-lg bg-emerald-700 hover:bg-emerald-600 text-white font-bold text-xs flex items-center gap-1 shadow-2xs shrink-0 cursor-pointer"
                 >
-                  <MessageCircle className="w-4 h-4" />
-                  <span>Confirm on WhatsApp (+91 98200 12345)</span>
+                  <MessageCircle className="w-3.5 h-3.5" />
+                  <span>Open</span>
                 </a>
+              </div>
+
+              <div className="flex flex-col sm:flex-row justify-center gap-2.5 max-w-md mx-auto">
+                <a
+                  href={buildSiteVisitWhatsAppUrl({ ...form, refCode: bookingRef })}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex-1 py-3 px-4 rounded-xl bg-emerald-700 hover:bg-emerald-600 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-lg shadow-emerald-950/10 cursor-pointer"
+                >
+                  <MessageCircle className="w-4 h-4 text-emerald-200" />
+                  <span>Receive on My WhatsApp</span>
+                </a>
+
+                <a
+                  href={buildConciergeWhatsAppUrl(bookingRef, form.propertyName)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="py-3 px-3 rounded-xl border border-stone-300 bg-white hover:bg-stone-50 text-stone-800 font-bold text-xs flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
+                >
+                  <Phone className="w-3.5 h-3.5 text-emerald-700" />
+                  <span>Site Desk</span>
+                </a>
+
                 <button
                   onClick={onClose}
-                  className="px-6 py-3 rounded-xl bg-stone-900 text-white font-bold text-xs hover:bg-stone-800 transition-colors cursor-pointer"
+                  className="py-3 px-5 rounded-xl bg-stone-900 text-white font-bold text-xs hover:bg-stone-800 transition-colors cursor-pointer"
                 >
                   Done
                 </button>
@@ -192,6 +236,10 @@ export default function VipSiteVisitModal({ property, onClose }) {
                     onChange={(e) => setForm({ ...form, phone: e.target.value })}
                     className="w-full bg-stone-50 border border-stone-300 rounded-xl px-3.5 py-2.5 text-xs text-stone-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-teal-700"
                   />
+                  <p className="text-[10px] text-teal-800 mt-1 font-semibold flex items-center gap-1">
+                    <span className="w-1.5 h-1.5 rounded-full bg-teal-600"></span>
+                    <span>VIP site inspection pass & driver coordinates will go to this WhatsApp.</span>
+                  </p>
                 </div>
               </div>
 
