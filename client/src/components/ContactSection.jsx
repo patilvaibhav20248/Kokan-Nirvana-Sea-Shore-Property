@@ -9,7 +9,8 @@ import {
   CheckCircle2, 
   ShieldCheck, 
   Compass,
-  Calendar
+  Calendar,
+  UserCheck
 } from 'lucide-react';
 import { submitInquiry } from '../firebase/firebaseService';
 
@@ -49,45 +50,45 @@ export default function ContactSection({ onBookSiteVisit }) {
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
-        {/* Section Header */}
-        <div className="max-w-3xl mb-16">
+        {/* Header */}
+        <div className="max-w-3xl mb-14">
           <div className="inline-flex items-center gap-1.5 text-xs font-bold text-amber-300 uppercase tracking-widest bg-amber-950/80 px-3.5 py-1 rounded-full mb-3 border border-amber-800">
             <Compass className="w-3.5 h-3.5 text-amber-400" />
-            <span>Connect with Kokan Nirvana Team</span>
+            <span>Direct Human Sales & Site Team</span>
           </div>
 
           <h2 className="font-serif-luxury text-3xl sm:text-4xl md:text-5xl font-bold text-white tracking-tight leading-tight">
-            Begin Your Coastal Paradise Journey in Dapoli
+            Connect with Our Dapoli Site Team
           </h2>
           <p className="mt-3 text-stone-300 text-sm sm:text-base leading-relaxed">
-            Whether you are looking for an immediate possession Collector NA plot, an Alphonso mango agro estate, 
-            or a sea-facing luxury villa, our on-ground team in Dapoli is here to guide you with complete transparency.
+            Planning a weekend road trip to Dapoli? Speak directly with our site managers or visit our local sales office. 
+            We coordinate free plot inspections, boundary stone checks, and revenue record reviews.
           </p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           
-          {/* Contact Details & Site Office Cards (Left) */}
+          {/* Site Office & Team Cards (Left, 5 Cols) */}
           <div className="lg:col-span-5 space-y-6">
             
-            {/* Dapoli Site Office Card */}
-            <div className="bg-stone-800/90 p-6 sm:p-7 rounded-3xl border border-stone-700 backdrop-blur-md">
-              <div className="flex items-center gap-2 text-xs font-bold text-teal-300 uppercase tracking-wider mb-2">
-                <MapPin className="w-4 h-4 text-amber-400" />
-                <span>Dapoli Main Experience Center</span>
+            {/* Dapoli Office Card */}
+            <div className="bg-stone-800/90 p-6 sm:p-7 rounded-3xl border border-stone-700">
+              <div className="flex items-center gap-2 text-xs font-bold text-amber-400 uppercase tracking-wider mb-2">
+                <MapPin className="w-4 h-4" />
+                <span>Dapoli Main Site Office</span>
               </div>
               <h3 className="font-serif-luxury text-xl font-bold text-white mb-2">
                 Kokan Nirvana Sea Shore Property
               </h3>
               <p className="text-xs sm:text-sm text-stone-300 leading-relaxed mb-4">
-                Near Murud Beach Road, Opposite Coconut Palm Ridge, Dapoli, District Ratnagiri, Maharashtra 415712
+                Near Murud Beach Road Junction, Opposite Coconut Palm Grove, Dapoli, District Ratnagiri, Maharashtra 415712
               </p>
 
-              <div className="space-y-3 text-xs text-stone-300 pt-4 border-t border-stone-700/80">
+              <div className="space-y-3 text-xs text-stone-300 pt-4 border-t border-stone-700">
                 <div className="flex items-center gap-3">
-                  <Phone className="w-4 h-4 text-teal-400 shrink-0" />
+                  <Phone className="w-4 h-4 text-amber-400 shrink-0" />
                   <div>
-                    <span className="block text-stone-400 text-[10px] uppercase font-bold">Call / Inquiry Line</span>
+                    <span className="block text-stone-400 text-[10px] uppercase font-bold">Direct Site Office Lines</span>
                     <a href="tel:+919820012345" className="font-bold text-white hover:text-amber-300 transition-colors">
                       +91 98200 12345 / +91 84460 67890
                     </a>
@@ -97,22 +98,22 @@ export default function ContactSection({ onBookSiteVisit }) {
                 <div className="flex items-center gap-3">
                   <MessageCircle className="w-4 h-4 text-emerald-400 shrink-0" />
                   <div>
-                    <span className="block text-stone-400 text-[10px] uppercase font-bold">WhatsApp Concierge</span>
+                    <span className="block text-stone-400 text-[10px] uppercase font-bold">WhatsApp Site Desk</span>
                     <a 
-                      href="https://wa.me/919820012345?text=Hello%20Kokan%20Nirvana%20team,%20I%20would%20like%20to%20know%20more%20about%20sea-facing%20plots%20in%20Dapoli"
+                      href="https://wa.me/919820012345?text=Hello%20Kokan%20Nirvana%20team,%20I%20would%20like%20to%20know%20more%20about%20Collector%20NA%20plots%20in%20Dapoli"
                       target="_blank" 
                       rel="noopener noreferrer"
                       className="font-bold text-emerald-300 hover:text-white transition-colors"
                     >
-                      Chat Directly on WhatsApp →
+                      Chat on WhatsApp (+91 98200 12345) →
                     </a>
                   </div>
                 </div>
 
                 <div className="flex items-center gap-3">
-                  <Mail className="w-4 h-4 text-teal-400 shrink-0" />
+                  <Mail className="w-4 h-4 text-amber-400 shrink-0" />
                   <div>
-                    <span className="block text-stone-400 text-[10px] uppercase font-bold">Email Desk</span>
+                    <span className="block text-stone-400 text-[10px] uppercase font-bold">Email Inquiries</span>
                     <a href="mailto:inquiries@kokannirvana.com" className="font-bold text-white hover:text-amber-300 transition-colors">
                       inquiries@kokannirvana.com
                     </a>
@@ -120,60 +121,61 @@ export default function ContactSection({ onBookSiteVisit }) {
                 </div>
 
                 <div className="flex items-center gap-3">
-                  <Clock className="w-4 h-4 text-amber-400 shrink-0" />
+                  <Clock className="w-4 h-4 text-stone-400 shrink-0" />
                   <div>
-                    <span className="block text-stone-400 text-[10px] uppercase font-bold">Visiting Hours</span>
-                    <span className="font-medium text-stone-200">Monday - Sunday: 9:00 AM - 7:00 PM (Site open all 7 days)</span>
+                    <span className="block text-stone-400 text-[10px] uppercase font-bold">Office & Site Visiting Hours</span>
+                    <span className="font-medium text-stone-200">Monday to Sunday: 9:00 AM to 7:00 PM (Open all weekends)</span>
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* Quick Site Visit Banner */}
-            <div className="bg-gradient-to-r from-teal-900 to-emerald-950 p-6 rounded-3xl border border-teal-700/60 flex items-center justify-between gap-4">
-              <div>
-                <h4 className="font-bold text-sm text-white">Planning a Weekend Trip to Dapoli?</h4>
-                <p className="text-xs text-teal-200 mt-1">Book our chauffeured coastal tour with complimentary local lunch.</p>
+            {/* Local Team Contacts */}
+            <div className="bg-stone-850 p-5 rounded-2xl border border-stone-800 text-xs text-stone-300 space-y-2">
+              <span className="text-[10px] uppercase font-bold text-amber-400 block tracking-wider">
+                Local On-Ground Coordinators:
+              </span>
+              <div className="flex justify-between items-center py-1 border-b border-stone-800">
+                <span className="font-bold text-white">Sagar Kadam</span>
+                <span className="text-stone-400">Site Operations & Survey Manager</span>
               </div>
-              <button
-                onClick={onBookSiteVisit}
-                className="shrink-0 px-4 py-2.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-stone-950 font-bold text-xs shadow-md transition-colors cursor-pointer"
-              >
-                Book VIP Visit
-              </button>
+              <div className="flex justify-between items-center py-1">
+                <span className="font-bold text-white">Adv. Rajeshwar Patil</span>
+                <span className="text-stone-400">Dapoli Revenue & Title Counsel</span>
+              </div>
             </div>
 
           </div>
 
-          {/* Inquiry Form (Right) */}
-          <div className="lg:col-span-7 bg-stone-800/95 p-6 sm:p-8 rounded-3xl border border-stone-700 shadow-xl">
+          {/* Direct Inquiry Form (Right, 7 Cols) */}
+          <div className="lg:col-span-7 bg-stone-800/90 p-6 sm:p-8 rounded-3xl border border-stone-700">
             {submitted ? (
               <div className="text-center py-10">
                 <div className="w-16 h-16 rounded-full bg-emerald-900/60 text-emerald-400 border border-emerald-700 flex items-center justify-center mx-auto mb-4">
                   <CheckCircle2 className="w-10 h-10" />
                 </div>
                 <h3 className="font-serif-luxury text-2xl font-bold text-white mb-2">
-                  Inquiry Successfully Received!
+                  Inquiry Received by Dapoli Desk!
                 </h3>
                 <p className="text-sm text-stone-300 max-w-md mx-auto mb-6">
-                  Thank you, <span className="font-bold text-white">{form.name}</span>. Your details have been stored in our Firebase database and forwarded to our senior property consultant.
+                  Thank you, <span className="font-bold text-white">{form.name}</span>. Our Dapoli property manager will call you at <span className="font-bold text-white">{form.phone}</span> with the plot layout and 7/12 extract copy.
                 </p>
                 <button
                   onClick={() => setSubmitted(false)}
-                  className="px-5 py-2.5 rounded-xl bg-teal-700 hover:bg-teal-600 text-white font-bold text-xs"
+                  className="px-5 py-2.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-stone-950 font-bold text-xs"
                 >
-                  Send Another Message
+                  Send Another Inquiry
                 </button>
               </div>
             ) : (
               <div>
                 <div className="mb-6">
-                  <span className="text-xs uppercase font-bold text-teal-400 tracking-wider">Fast Response Guaranteed</span>
+                  <span className="text-xs uppercase font-bold text-amber-400 tracking-wider">Direct Response Guarantee</span>
                   <h3 className="font-serif-luxury text-2xl font-bold text-white mt-0.5">
-                    Request Property Information & Callback
+                    Request Pricing & Land Records
                   </h3>
                   <p className="text-xs text-stone-400 mt-1">
-                    Fill out the form below. We will send 7/12 extract samples, plot layouts, and current offers within 2 hours.
+                    Fill out the form below to receive the sanctioned Collector NA order, demarcation map, and pricing sheet on WhatsApp.
                   </p>
                 </div>
 
@@ -184,22 +186,22 @@ export default function ContactSection({ onBookSiteVisit }) {
                       <input
                         type="text"
                         required
-                        placeholder="e.g. Mahesh Shinde"
+                        placeholder="e.g. Ramesh Joshi"
                         value={form.name}
                         onChange={(e) => setForm({ ...form, name: e.target.value })}
-                        className="w-full bg-stone-900 border border-stone-700 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:ring-2 focus:ring-teal-500"
+                        className="w-full bg-stone-900 border border-stone-700 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:ring-2 focus:ring-amber-400"
                       />
                     </div>
 
                     <div>
-                      <label className="block text-[11px] font-bold text-stone-300 uppercase mb-1">WhatsApp / Phone *</label>
+                      <label className="block text-[11px] font-bold text-stone-300 uppercase mb-1">WhatsApp / Phone Number *</label>
                       <input
                         type="tel"
                         required
                         placeholder="+91 98200 XXXXX"
                         value={form.phone}
                         onChange={(e) => setForm({ ...form, phone: e.target.value })}
-                        className="w-full bg-stone-900 border border-stone-700 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:ring-2 focus:ring-teal-500"
+                        className="w-full bg-stone-900 border border-stone-700 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:ring-2 focus:ring-amber-400"
                       />
                     </div>
                   </div>
@@ -209,10 +211,10 @@ export default function ContactSection({ onBookSiteVisit }) {
                       <label className="block text-[11px] font-bold text-stone-300 uppercase mb-1">Email Address</label>
                       <input
                         type="email"
-                        placeholder="name@example.com"
+                        placeholder="name@gmail.com"
                         value={form.email}
                         onChange={(e) => setForm({ ...form, email: e.target.value })}
-                        className="w-full bg-stone-900 border border-stone-700 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:ring-2 focus:ring-teal-500"
+                        className="w-full bg-stone-900 border border-stone-700 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:ring-2 focus:ring-amber-400"
                       />
                     </div>
 
@@ -220,26 +222,26 @@ export default function ContactSection({ onBookSiteVisit }) {
                       <label className="block text-[11px] font-bold text-stone-300 uppercase mb-1">Your Current City</label>
                       <input
                         type="text"
-                        placeholder="e.g. Mumbai / Pune / Dubai"
+                        placeholder="e.g. Mumbai / Pune / Thane"
                         value={form.city}
                         onChange={(e) => setForm({ ...form, city: e.target.value })}
-                        className="w-full bg-stone-900 border border-stone-700 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:ring-2 focus:ring-teal-500"
+                        className="w-full bg-stone-900 border border-stone-700 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:ring-2 focus:ring-amber-400"
                       />
                     </div>
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
                     <div>
-                      <label className="block text-[11px] font-bold text-stone-300 uppercase mb-1">Interested Category</label>
+                      <label className="block text-[11px] font-bold text-stone-300 uppercase mb-1">Interested Project Type</label>
                       <select
                         value={form.interestedCategory}
                         onChange={(e) => setForm({ ...form, interestedCategory: e.target.value })}
-                        className="w-full bg-stone-900 border border-stone-700 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:ring-2 focus:ring-teal-500 cursor-pointer"
+                        className="w-full bg-stone-900 border border-stone-700 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:ring-2 focus:ring-amber-400 cursor-pointer"
                       >
-                        <option value="Collector NA Plots">Collector NA Plots (Sandalwood Palms)</option>
-                        <option value="Beachfront Villas">Beachfront Villas (Azure Coast)</option>
-                        <option value="Alphonso Agro Estates">Alphonso Mango Agro Estates (1-2 Acres)</option>
-                        <option value="Oceanview Cottages">Oceanview Holiday Cottages</option>
+                        <option value="Collector NA Plots">Sandalwood Palms NA Plots (Ladghar)</option>
+                        <option value="Beachfront Villas">The Azure Coast Luxury Villas (Murud)</option>
+                        <option value="Alphonso Agro Estates">Alphonso Greens 1-Acre Estates (Karde)</option>
+                        <option value="Oceanview Cottages">Coral Horizon Holiday Cottages (Karde)</option>
                       </select>
                     </div>
 
@@ -248,40 +250,40 @@ export default function ContactSection({ onBookSiteVisit }) {
                       <select
                         value={form.budget}
                         onChange={(e) => setForm({ ...form, budget: e.target.value })}
-                        className="w-full bg-stone-900 border border-stone-700 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:ring-2 focus:ring-teal-500 cursor-pointer"
+                        className="w-full bg-stone-900 border border-stone-700 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:ring-2 focus:ring-amber-400 cursor-pointer"
                       >
-                        <option value="₹25 L - ₹50 L">₹25 Lakhs - ₹50 Lakhs</option>
-                        <option value="₹50 L - ₹1 Cr">₹50 Lakhs - ₹1 Crore</option>
-                        <option value="₹1 Cr - ₹2 Cr">₹1 Crore - ₹2 Crores</option>
-                        <option value="₹2 Cr+">₹2 Crores+ (Ultra Luxury)</option>
+                        <option value="₹25 L - ₹50 L">₹25 Lakhs - ₹50 Lakhs (NA Plots)</option>
+                        <option value="₹50 L - ₹1 Cr">₹50 Lakhs - ₹1 Crore (Agro/Cottages)</option>
+                        <option value="₹1 Cr - ₹2 Cr">₹1 Crore - ₹2 Crores (Beach Villas)</option>
+                        <option value="₹2 Cr+">₹2 Crores+ (Ultra Luxury Beachfront)</option>
                       </select>
                     </div>
                   </div>
 
                   <div>
-                    <label className="block text-[11px] font-bold text-stone-300 uppercase mb-1">Message or Specific Requirements</label>
+                    <label className="block text-[11px] font-bold text-stone-300 uppercase mb-1">Specific Questions or Plot Size Preference</label>
                     <textarea
                       rows={3}
-                      placeholder="e.g. Looking for a sea-facing plot within walking distance to Ladghar or Murud beach with clear NA orders."
+                      placeholder="e.g. Interested in a 2.5 Guntha sea-facing plot in Ladghar with separate 7/12 extract. Visiting Dapoli next Saturday."
                       value={form.message}
                       onChange={(e) => setForm({ ...form, message: e.target.value })}
-                      className="w-full bg-stone-900 border border-stone-700 rounded-xl p-3 text-xs text-white focus:outline-none focus:ring-2 focus:ring-teal-500"
+                      className="w-full bg-stone-900 border border-stone-700 rounded-xl p-3 text-xs text-white focus:outline-none focus:ring-2 focus:ring-amber-400"
                     />
                   </div>
 
                   <div className="pt-2 flex flex-wrap items-center justify-between gap-3">
                     <span className="text-[11px] text-stone-400 flex items-center gap-1.5">
                       <ShieldCheck className="w-4 h-4 text-emerald-400 shrink-0" />
-                      <span>Data saved to Firebase & Node server backend</span>
+                      <span>Data safely stored in Firebase & dispatched to site manager</span>
                     </span>
 
                     <button
                       type="submit"
                       disabled={loading}
-                      className="px-7 py-3 rounded-xl bg-gradient-to-r from-amber-400 via-amber-300 to-yellow-400 hover:from-amber-300 hover:to-yellow-300 text-stone-950 font-bold text-xs sm:text-sm shadow-lg shadow-amber-950/40 flex items-center gap-2 cursor-pointer transition-all disabled:opacity-50"
+                      className="px-7 py-3 rounded-xl bg-amber-400 hover:bg-amber-300 text-stone-950 font-bold text-xs sm:text-sm shadow-md flex items-center gap-2 cursor-pointer transition-all disabled:opacity-50"
                     >
                       <Send className="w-4 h-4 text-stone-950" />
-                      <span>{loading ? 'Submitting...' : 'Send Inquiry Now'}</span>
+                      <span>{loading ? 'Submitting...' : 'Send Inquiry'}</span>
                     </button>
                   </div>
                 </form>

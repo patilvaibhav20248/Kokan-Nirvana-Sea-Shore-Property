@@ -2,14 +2,13 @@ import React, { useState, useEffect } from 'react';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import BeachDestinationsStrip from './components/BeachDestinationsStrip';
-import VillaConfigurator from './components/VillaConfigurator';
+import PlotCalculator from './components/PlotCalculator';
 import PropertyList from './components/PropertyList';
 import PropertyDetailModal from './components/PropertyDetailModal';
 import MasterPlanExplorer from './components/MasterPlanExplorer';
-import DayInDapoli from './components/DayInDapoli';
-import LegalVerifier from './components/LegalVerifier';
-import WhyDapoliSection from './components/WhyDapoliSection';
-import InvestmentCalculator from './components/InvestmentCalculator';
+import RouteGuide from './components/RouteGuide';
+import LegalGuide from './components/LegalGuide';
+import FaqSection from './components/FaqSection';
 import TestimonialsSection from './components/TestimonialsSection';
 import ContactSection from './components/ContactSection';
 import VipSiteVisitModal from './components/VipSiteVisitModal';
@@ -99,13 +98,6 @@ export default function App() {
     return true;
   });
 
-  const handleApplySearch = () => {
-    const propertiesEl = document.getElementById('properties');
-    if (propertiesEl) {
-      propertiesEl.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
-
   const handleResetFilters = () => {
     setSelectedCategory('All');
     setSelectedLocation('All');
@@ -126,7 +118,7 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-stone-50 text-stone-900 font-sans flex flex-col selection:bg-teal-700 selection:text-white">
+    <div className="min-h-screen bg-[#faf8f5] text-stone-900 font-sans flex flex-col selection:bg-amber-900 selection:text-white">
       
       {/* Top Header & Navigation */}
       <Navbar
@@ -137,32 +129,24 @@ export default function App() {
 
       {/* Main Content */}
       <main className="flex-1">
-        {/* Unique Bento Hero Section */}
+        {/* Authentic Human Real-Estate Hero */}
         <Hero
           onOpenSiteVisit={() => handleOpenSiteVisit(null)}
           onOpenBrochure={() => setBrochureModalOpen(true)}
-          selectedCategory={selectedCategory}
-          setSelectedCategory={setSelectedCategory}
-          selectedLocation={selectedLocation}
-          setSelectedLocation={setSelectedLocation}
-          selectedBudget={selectedBudget}
-          setSelectedBudget={setSelectedBudget}
-          onApplySearch={handleApplySearch}
-          onSelectProperty={(prop) => setSelectedProperty(prop)}
         />
 
-        {/* Dapoli's 5 Iconic Shorelines Discovery */}
+        {/* Dapoli's 5 Coastal Beach Belts */}
         <BeachDestinationsStrip
           selectedLocation={selectedLocation}
           onSelectLocation={setSelectedLocation}
         />
 
-        {/* Interactive Custom Villa & Plot Builder Configurator */}
-        <VillaConfigurator
+        {/* Guntha ↔ Sq.Ft & Maharashtra Stamp Duty Estimator */}
+        <PlotCalculator
           onBookSiteVisit={handleOpenSiteVisit}
         />
 
-        {/* Featured Property Catalog */}
+        {/* Featured Projects & Land Layouts */}
         <PropertyList
           properties={filteredProperties}
           activeCategory={selectedCategory}
@@ -172,37 +156,32 @@ export default function App() {
           onResetFilters={handleResetFilters}
         />
 
-        {/* Interactive Master Plan & Plot Selector */}
+        {/* Interactive Master Plan & Demarcated Plot Selector */}
         <MasterPlanExplorer
           plots={plots}
           onReservePlot={handleReservePlot}
           onOpenBrochure={() => setBrochureModalOpen(true)}
         />
 
-        {/* 24-Hour Coastal Rhythm in Dapoli */}
-        <DayInDapoli />
+        {/* Travel & Route Guide from Mumbai & Pune */}
+        <RouteGuide
+          onBookSiteVisit={handleOpenSiteVisit}
+        />
 
-        {/* Digital 7/12 & NA Sanad Transparency Verifier */}
-        <LegalVerifier
+        {/* Maharashtra Land Law & 7/12 Legal Guide */}
+        <LegalGuide
           onOpenBrochure={() => setBrochureModalOpen(true)}
         />
 
-        {/* Why Dapoli / Konkan Paradise Highlights */}
-        <WhyDapoliSection
-          onOpenBrochure={() => setBrochureModalOpen(true)}
-          onBookSiteVisit={() => handleOpenSiteVisit(null)}
+        {/* Buyer Frequently Asked Questions */}
+        <FaqSection
+          onOpenSiteVisit={handleOpenSiteVisit}
         />
 
-        {/* Financial ROI & EMI Calculator */}
-        <InvestmentCalculator
-          onOpenSiteVisit={() => handleOpenSiteVisit(null)}
-          onOpenBrochure={() => setBrochureModalOpen(true)}
-        />
-
-        {/* Buyer Testimonials & Verified Reviews */}
+        {/* Verified Homeowner Reviews from Mumbai & Pune */}
         <TestimonialsSection testimonials={testimonials} />
 
-        {/* Direct Contact & Sales Desk */}
+        {/* Direct Site Office Contacts & Inquiry Form */}
         <ContactSection
           onBookSiteVisit={() => handleOpenSiteVisit(null)}
         />
@@ -217,24 +196,25 @@ export default function App() {
       {/* Floating Action Buttons */}
       <div className="fixed bottom-6 right-6 z-40 flex flex-col items-end gap-3 pointer-events-auto">
         <a
-          href="https://wa.me/919820012345?text=Hello%20Kokan%20Nirvana%20team,%20I%20am%20interested%20in%20sea-facing%20plots%20in%20Dapoli"
+          href="https://wa.me/919820012345?text=Hello%20Kokan%20Nirvana%20team,%20I%20am%20interested%20in%20sea-facing%20NA%20plots%20in%20Dapoli"
           target="_blank"
           rel="noopener noreferrer"
-          className="w-13 h-13 rounded-full bg-emerald-600 hover:bg-emerald-500 text-white flex items-center justify-center shadow-xl shadow-emerald-950/30 hover:scale-110 transition-all cursor-pointer group relative"
+          className="w-13 h-13 rounded-full bg-emerald-700 hover:bg-emerald-600 text-white flex items-center justify-center shadow-xl shadow-emerald-950/20 hover:scale-105 transition-all cursor-pointer group relative"
           aria-label="Direct WhatsApp Consultation"
         >
           <MessageCircle className="w-7 h-7" />
           <span className="absolute right-15 px-3 py-1.5 rounded-xl bg-stone-900 text-white text-xs font-semibold whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity shadow-lg pointer-events-none">
-            Chat on WhatsApp
+            Chat on WhatsApp (+91 98200 12345)
           </span>
         </a>
 
         <button
+          type="button"
           onClick={() => handleOpenSiteVisit(null)}
-          className="hidden sm:flex items-center gap-2 px-4 py-2.5 rounded-full bg-gradient-to-r from-teal-800 to-emerald-800 hover:from-teal-900 hover:to-emerald-900 text-white text-xs font-bold shadow-xl shadow-teal-950/30 hover:scale-105 transition-all cursor-pointer border border-teal-600/40"
+          className="hidden sm:flex items-center gap-2 px-4 py-2.5 rounded-full bg-stone-900 hover:bg-stone-800 text-white text-xs font-bold shadow-xl hover:scale-105 transition-all cursor-pointer border border-stone-700"
         >
-          <Calendar className="w-4 h-4 text-amber-300" />
-          <span>Book VIP Site Visit</span>
+          <Calendar className="w-4 h-4 text-amber-400" />
+          <span>Book Free Site Visit</span>
         </button>
       </div>
 
