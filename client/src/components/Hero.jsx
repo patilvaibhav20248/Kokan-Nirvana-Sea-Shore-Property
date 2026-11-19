@@ -84,22 +84,30 @@ export default function Hero({ onOpenSiteVisit, onOpenBrochure }) {
 
             {/* Action Buttons */}
             <div className="flex flex-wrap items-center gap-3 pt-2">
+              <a
+                href="#reservation"
+                className="px-6 py-3.5 rounded-xl font-bold text-xs sm:text-sm text-white bg-amber-900 hover:bg-amber-800 shadow-md shadow-amber-950/20 hover:scale-[1.01] transition-all flex items-center gap-2 cursor-pointer"
+              >
+                <Sparkles className="w-4 h-4 text-amber-300" />
+                <span>Reserve Plot (₹21k Refundable)</span>
+                <ArrowRight className="w-4 h-4 text-amber-200" />
+              </a>
+
               <button
                 type="button"
                 onClick={() => onOpenSiteVisit(null)}
-                className="px-6 py-3.5 rounded-xl font-bold text-xs sm:text-sm text-white bg-stone-900 hover:bg-stone-800 shadow-md shadow-stone-900/10 hover:scale-[1.01] transition-all flex items-center gap-2 cursor-pointer"
+                className="px-5 py-3.5 rounded-xl font-bold text-xs sm:text-sm text-stone-900 bg-stone-100 hover:bg-stone-200 border border-stone-300 hover:scale-[1.01] transition-all flex items-center gap-2 cursor-pointer"
               >
-                <Calendar className="w-4 h-4 text-amber-400" />
+                <Calendar className="w-4 h-4 text-amber-600" />
                 <span>Schedule VIP Site Visit</span>
-                <ArrowRight className="w-4 h-4 text-stone-400" />
               </button>
 
               <a
                 href="#plot-calculator"
-                className="px-5 py-3.5 rounded-xl font-bold text-xs sm:text-sm text-amber-950 bg-amber-100 hover:bg-amber-200/80 border border-amber-300/80 transition-all flex items-center gap-2 cursor-pointer"
+                className="px-4 py-3.5 rounded-xl font-bold text-xs sm:text-sm text-amber-950 bg-amber-100/70 hover:bg-amber-100 border border-amber-300/80 transition-all flex items-center gap-2 cursor-pointer"
               >
                 <Calculator className="w-4 h-4 text-amber-900" />
-                <span>Guntha & Stamp Duty Calculator</span>
+                <span>Plot Calculator</span>
               </a>
 
               <button
@@ -108,7 +116,7 @@ export default function Hero({ onOpenSiteVisit, onOpenBrochure }) {
                 className="px-4 py-3.5 rounded-xl font-semibold text-xs sm:text-sm text-stone-700 hover:text-stone-900 border border-stone-300 hover:bg-white transition-all flex items-center gap-1.5 cursor-pointer"
               >
                 <FileText className="w-4 h-4 text-stone-500" />
-                <span>Download Pricing & 7/12</span>
+                <span>Pricing & 7/12</span>
               </button>
             </div>
 

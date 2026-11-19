@@ -41,6 +41,7 @@ const propertiesPath = path.join(__dirname, 'data', 'properties.json');
 const plotsPath = path.join(__dirname, 'data', 'plots.json');
 const inquiriesPath = path.join(__dirname, 'data', 'inquiries.json');
 const siteVisitsPath = path.join(__dirname, 'data', 'site-visits.json');
+const reservationsPath = path.join(__dirname, 'data', 'reservations.json');
 const testimonialsPath = path.join(__dirname, 'data', 'testimonials.json');
 
 // Health Check
@@ -188,6 +189,36 @@ app.post('/api/site-visit', (req, res) => {
     success: true,
     message: 'Your VIP Site Visit request is received! Our Dapoli guest hospitality manager will call to confirm logistics and complimentary Konkani refreshments.',
     data: newVisit
+  });
+});
+
+// Official Plot & Site Visit Reservations
+app.get('/api/reservations', (req, res) => {
+  const reservations = readJsonFile(reservationsPath, []);
+  res.json({ success: true, count: reservations.length, data: reservations });
+});
+
+app.post('/api/reservations', (req, res) => {
+  const reservationData = req.body;
+
+  if (!reservationData.fullName || !reservationData.phone) {
+    return res.status(400).json({ success: false, message: 'Full name and phone number are required.' });
+  }
+
+  const reservations = readJsonFile(reservationsPath, []);
+  const newReservation = {
+    id: reservationData.reservationId || `KN-RES-${Date.now()}`,
+    ...reservationData,
+    receivedAt: new Date().toISOString()
+  };
+
+  reservations.unshift(newReservation);
+  writeJsonFile(reservationsPath, reservations);
+
+  res.status(201).json({
+    success: true,
+    message: 'Reservation confirmed! Your official digital pass has been generated.',
+    data: newReservation
   });
 });
 

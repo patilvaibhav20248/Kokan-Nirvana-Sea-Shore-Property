@@ -6,14 +6,23 @@ import {
   Maximize2, 
   Calendar, 
   CheckCircle2, 
-  MessageCircle,
-  Clock,
+  Heart,
+  Sparkles,
   ArrowRight
 } from 'lucide-react';
+import { useFavorites } from '../context/FavoritesContext';
 
-export default function PropertyCard({ property, onSelectProperty, onBookSiteVisit }) {
+export default function PropertyCard({ property, onSelectProperty, onBookSiteVisit, onReserveProperty }) {
+  const { isLiked, toggleLike } = useFavorites();
+  const liked = isLiked(property.id);
+
+  const handleLikeClick = (e) => {
+    e.stopPropagation();
+    toggleLike(property.id);
+  };
+
   return (
-    <div className="bg-white rounded-3xl overflow-hidden border border-stone-200 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col group">
+    <div className="bg-white rounded-3xl overflow-hidden border border-stone-200 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col group relative">
       
       {/* Property Image & Status */}
       <div className="relative aspect-[16/10] overflow-hidden bg-stone-100">
@@ -26,7 +35,7 @@ export default function PropertyCard({ property, onSelectProperty, onBookSiteVis
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
         
         {/* Top Badges */}
-        <div className="absolute top-3 left-3 flex flex-wrap gap-1.5">
+        <div className="absolute top-3 left-3 flex flex-wrap gap-1.5 z-10">
           <span className="px-2.5 py-1 rounded-full text-xs font-bold bg-stone-900/90 text-white backdrop-blur-md shadow-sm">
             {property.category || property.projectType}
           </span>
@@ -35,12 +44,32 @@ export default function PropertyCard({ property, onSelectProperty, onBookSiteVis
           </span>
         </div>
 
+        {/* Like / Favorite Button */}
+        <button
+          type="button"
+          onClick={handleLikeClick}
+          className={`absolute top-3 right-3 z-20 w-9 h-9 rounded-full flex items-center justify-center transition-all cursor-pointer shadow-md ${
+            liked
+              ? 'bg-white text-red-500 scale-110 shadow-red-500/20'
+              : 'bg-black/40 hover:bg-white text-white hover:text-red-500 backdrop-blur-md'
+          }`}
+          aria-label={liked ? 'Remove from favorites' : 'Save property for later'}
+          title={liked ? 'Saved in your shortlist' : 'Save for later'}
+        >
+          <Heart className={`w-4 h-4 transition-transform ${liked ? 'fill-red-500 scale-110' : ''}`} />
+        </button>
+
         {/* Distance Badge */}
-        <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between text-white text-xs">
+        <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between text-white text-xs z-10">
           <span className="flex items-center gap-1.5 bg-black/60 backdrop-blur-md px-2.5 py-1 rounded-md border border-white/10 font-medium">
             <Waves className="w-3.5 h-3.5 text-cyan-300" />
             {property.distanceToBeach || property.beachProximity}
           </span>
+          {liked && (
+            <span className="text-[10px] font-bold bg-red-600/90 text-white px-2 py-0.5 rounded-full backdrop-blur-md">
+              Saved
+            </span>
+          )}
         </div>
       </div>
 
@@ -107,23 +136,39 @@ export default function PropertyCard({ property, onSelectProperty, onBookSiteVis
             </span>
           </div>
 
-          <div className="grid grid-cols-2 gap-2">
+          {/* 3 Action Buttons: Dossier | Reserve Plot | Book Site Visit */}
+          <div className="grid grid-cols-3 gap-1.5">
             <button
               type="button"
               onClick={() => onSelectProperty(property)}
-              className="w-full py-2.5 px-3 rounded-xl border border-stone-300 hover:border-stone-400 text-stone-800 hover:bg-stone-50 font-bold text-xs transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
+              className="py-2.5 px-2 rounded-xl border border-stone-300 hover:border-stone-400 text-stone-800 hover:bg-stone-50 font-bold text-[11px] transition-colors flex items-center justify-center gap-1 cursor-pointer"
             >
               <Maximize2 className="w-3.5 h-3.5 text-stone-500" />
-              <span>Inspect Dossier</span>
+              <span>Dossier</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => {
+                if (onReserveProperty) {
+                  onReserveProperty(property);
+                } else if (onBookSiteVisit) {
+                  onBookSiteVisit(property);
+                }
+              }}
+              className="py-2.5 px-2 rounded-xl bg-amber-900 hover:bg-amber-800 text-white font-bold text-[11px] transition-colors flex items-center justify-center gap-1 shadow-sm cursor-pointer"
+            >
+              <Sparkles className="w-3.5 h-3.5 text-amber-300" />
+              <span>Reserve</span>
             </button>
 
             <button
               type="button"
               onClick={() => onBookSiteVisit(property)}
-              className="w-full py-2.5 px-3 rounded-xl bg-stone-900 hover:bg-stone-800 text-white font-bold text-xs transition-colors flex items-center justify-center gap-1.5 shadow-sm cursor-pointer"
+              className="py-2.5 px-2 rounded-xl bg-stone-900 hover:bg-stone-800 text-white font-bold text-[11px] transition-colors flex items-center justify-center gap-1 shadow-sm cursor-pointer"
             >
               <Calendar className="w-3.5 h-3.5 text-amber-300" />
-              <span>Book Site Visit</span>
+              <span>Visit</span>
             </button>
           </div>
         </div>

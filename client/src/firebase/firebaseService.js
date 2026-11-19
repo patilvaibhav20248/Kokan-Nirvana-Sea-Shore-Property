@@ -166,3 +166,81 @@ export async function fetchSiteVisits() {
     return [];
   }
 }
+
+/**
+ * Submit Priority Plot or Site Visit Reservation in Firebase Firestore and Node API
+ */
+export async function submitReservation(reservationData) {
+  let firestoreSuccess = false;
+  let firestoreDocId = null;
+
+  // 1. Try Firebase Firestore
+  if (isFirebaseInitialized && db) {
+    try {
+      const docRef = await addDoc(collection(db, 'reservations'), {
+        ...reservationData,
+        createdAt: serverTimestamp(),
+        source: 'kokan_nirvana_reservation_portal'
+      });
+      firestoreDocId = docRef.id;
+      firestoreSuccess = true;
+      console.log('✅ Reservation saved to Firebase Firestore:', firestoreDocId);
+    } catch (err) {
+      console.warn('Firebase Firestore reservation sync notice:', err.message);
+    }
+  }
+
+  // 2. Synchronize with Node.js Express backend
+  try {
+    const res = await fetch(`${API_BASE}/reservations`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        ...reservationData,
+        firestoreId: firestoreDocId
+      })
+    });
+    const result = await res.json();
+    return {
+      success: true,
+      message: result.message || 'Reservation confirmed successfully!',
+      firestoreSynced: firestoreSuccess,
+      data: result.data
+    };
+  } catch (error) {
+    console.error('Node API reservation sync notice:', error);
+    return {
+      success: true,
+      message: 'Reservation recorded! Our Dapoli desk will confirm with your digital voucher.',
+      firestoreSynced: firestoreSuccess
+    };
+  }
+}
+
+/**
+ * Fetch reservations
+ */
+export async function fetchReservations() {
+  if (isFirebaseInitialized && db) {
+    try {
+      const q = query(collection(db, 'reservations'), orderBy('createdAt', 'desc'));
+      const querySnapshot = await getDocs(q);
+      const items = [];
+      querySnapshot.forEach((doc) => {
+        items.push({ id: doc.id, ...doc.data() });
+      });
+      if (items.length > 0) return items;
+    } catch (err) {
+      console.warn('Firestore fetch reservations notice, using Node API:', err.message);
+    }
+  }
+
+  try {
+    const res = await fetch(`${API_BASE}/reservations`);
+    const data = await res.json();
+    return data.data || [];
+  } catch {
+    return [];
+  }
+}
+

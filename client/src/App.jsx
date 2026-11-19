@@ -6,6 +6,7 @@ import PlotCalculator from './components/PlotCalculator';
 import PropertyList from './components/PropertyList';
 import PropertyDetailModal from './components/PropertyDetailModal';
 import MasterPlanExplorer from './components/MasterPlanExplorer';
+import ReservationSection from './components/ReservationSection';
 import RouteGuide from './components/RouteGuide';
 import LegalGuide from './components/LegalGuide';
 import FaqSection from './components/FaqSection';
@@ -14,12 +15,14 @@ import ContactSection from './components/ContactSection';
 import VipSiteVisitModal from './components/VipSiteVisitModal';
 import BrochureDownloadModal from './components/BrochureDownloadModal';
 import AdminPanelModal from './components/AdminPanelModal';
+import SavedPropertiesDrawer from './components/SavedPropertiesDrawer';
 import Footer from './components/Footer';
 
+import { FavoritesProvider } from './context/FavoritesContext';
 import { initialProperties, initialPlots, initialTestimonials } from './data/fallbackData';
 import { MessageCircle, Calendar } from 'lucide-react';
 
-export default function App() {
+function MainApp() {
   // Properties and Data states
   const [properties, setProperties] = useState(initialProperties);
   const [plots, setPlots] = useState(initialPlots);
@@ -31,8 +34,9 @@ export default function App() {
   const [selectedLocation, setSelectedLocation] = useState('All');
   const [selectedBudget, setSelectedBudget] = useState('All');
 
-  // Modal States
+  // Modal & Selection States
   const [selectedProperty, setSelectedProperty] = useState(null);
+  const [preselectedReservationProperty, setPreselectedReservationProperty] = useState(null);
   const [siteVisitModalOpen, setSiteVisitModalOpen] = useState(false);
   const [siteVisitTargetProperty, setSiteVisitTargetProperty] = useState(null);
   const [brochureModalOpen, setBrochureModalOpen] = useState(false);
@@ -79,7 +83,7 @@ export default function App() {
   // Filtered Properties Computation
   const filteredProperties = properties.filter((prop) => {
     // 1. Category Filter
-    if (selectedCategory !== 'All' && prop.category.toLowerCase() !== selectedCategory.toLowerCase()) {
+    if (selectedCategory !== 'All' && selectedCategory !== 'Liked' && prop.category.toLowerCase() !== selectedCategory.toLowerCase()) {
       return false;
     }
 
@@ -109,12 +113,27 @@ export default function App() {
     setSiteVisitModalOpen(true);
   };
 
-  const handleReservePlot = (plot) => {
-    setSiteVisitTargetProperty({
+  const handleReservePlotFromMasterPlan = (plot) => {
+    const formatted = {
       id: plot.id,
-      title: `${plot.name} (${plot.size}, ${plot.zone})`
-    });
-    setSiteVisitModalOpen(true);
+      title: `${plot.name} (${plot.size}, ${plot.zone})`,
+      plotSize: plot.size,
+      location: 'Dapoli Coastal Belt',
+      price: plot.price
+    };
+    setPreselectedReservationProperty(formatted);
+    const reservationEl = document.getElementById('reservation');
+    if (reservationEl) {
+      reservationEl.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
+  const handleReserveProperty = (property) => {
+    setPreselectedReservationProperty(property);
+    const reservationEl = document.getElementById('reservation');
+    if (reservationEl) {
+      reservationEl.scrollIntoView({ behavior: 'smooth' });
+    }
   };
 
   return (
@@ -153,13 +172,20 @@ export default function App() {
           setActiveCategory={setSelectedCategory}
           onSelectProperty={(prop) => setSelectedProperty(prop)}
           onBookSiteVisit={(prop) => handleOpenSiteVisit(prop)}
+          onReserveProperty={handleReserveProperty}
           onResetFilters={handleResetFilters}
+        />
+
+        {/* Complete Reservation Desk (Priority Token Hold & Free Site Visits) */}
+        <ReservationSection
+          preselectedProperty={preselectedReservationProperty}
+          onClearPreselected={() => setPreselectedReservationProperty(null)}
         />
 
         {/* Interactive Master Plan & Demarcated Plot Selector */}
         <MasterPlanExplorer
           plots={plots}
-          onReservePlot={handleReservePlot}
+          onReservePlot={handleReservePlotFromMasterPlan}
           onOpenBrochure={() => setBrochureModalOpen(true)}
         />
 
@@ -208,15 +234,21 @@ export default function App() {
           </span>
         </a>
 
-        <button
-          type="button"
-          onClick={() => handleOpenSiteVisit(null)}
-          className="hidden sm:flex items-center gap-2 px-4 py-2.5 rounded-full bg-stone-900 hover:bg-stone-800 text-white text-xs font-bold shadow-xl hover:scale-105 transition-all cursor-pointer border border-stone-700"
+        <a
+          href="#reservation"
+          className="hidden sm:flex items-center gap-2 px-4 py-2.5 rounded-full bg-amber-900 hover:bg-amber-800 text-white text-xs font-bold shadow-xl hover:scale-105 transition-all cursor-pointer border border-amber-700"
         >
-          <Calendar className="w-4 h-4 text-amber-400" />
-          <span>Book Free Site Visit</span>
-        </button>
+          <Calendar className="w-4 h-4 text-amber-300" />
+          <span>Reserve Plot / Visit</span>
+        </a>
       </div>
+
+      {/* Saved Properties Drawer */}
+      <SavedPropertiesDrawer
+        properties={properties}
+        onSelectProperty={(prop) => setSelectedProperty(prop)}
+        onReserveProperty={handleReserveProperty}
+      />
 
       {/* Modals */}
       {selectedProperty && (
@@ -226,6 +258,10 @@ export default function App() {
           onBookSiteVisit={(prop) => {
             setSelectedProperty(null);
             handleOpenSiteVisit(prop);
+          }}
+          onReserveProperty={(prop) => {
+            setSelectedProperty(null);
+            handleReserveProperty(prop);
           }}
         />
       )}
@@ -253,5 +289,13 @@ export default function App() {
       )}
 
     </div>
+  );
+}
+
+export default function App() {
+  return (
+    <FavoritesProvider>
+      <MainApp />
+    </FavoritesProvider>
   );
 }

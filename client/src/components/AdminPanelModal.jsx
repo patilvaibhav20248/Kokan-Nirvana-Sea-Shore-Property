@@ -13,13 +13,15 @@ import {
   ShieldCheck, 
   AlertCircle,
   Sparkles,
-  Server
+  Server,
+  FileCheck
 } from 'lucide-react';
-import { fetchInquiries, fetchSiteVisits } from '../firebase/firebaseService';
+import { fetchInquiries, fetchSiteVisits, fetchReservations } from '../firebase/firebaseService';
 import { isFirebaseInitialized, firebaseConfig } from '../firebase/config';
 
 export default function AdminPanelModal({ onClose }) {
-  const [activeTab, setActiveTab] = useState('inquiries'); // 'inquiries' | 'siteVisits' | 'firebaseStatus'
+  const [activeTab, setActiveTab] = useState('reservations'); // 'reservations' | 'inquiries' | 'siteVisits' | 'firebaseStatus'
+  const [reservations, setReservations] = useState([]);
   const [inquiries, setInquiries] = useState([]);
   const [siteVisits, setSiteVisits] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -27,10 +29,14 @@ export default function AdminPanelModal({ onClose }) {
   const loadData = async () => {
     setLoading(true);
     try {
-      const inqs = await fetchInquiries();
-      const visits = await fetchSiteVisits();
+      const [inqs, visits, resvs] = await Promise.all([
+        fetchInquiries(),
+        fetchSiteVisits(),
+        fetchReservations()
+      ]);
       setInquiries(inqs);
       setSiteVisits(visits);
+      setReservations(resvs);
     } catch (err) {
       console.error(err);
     } finally {
@@ -87,11 +93,21 @@ export default function AdminPanelModal({ onClose }) {
         </div>
 
         {/* Navigation Tabs */}
-        <div className="flex bg-stone-100 px-6 pt-3 border-b border-stone-200 gap-4 text-xs font-bold">
+        <div className="flex bg-stone-100 px-6 pt-3 border-b border-stone-200 gap-4 text-xs font-bold overflow-x-auto">
+          <button
+            onClick={() => setActiveTab('reservations')}
+            className={`pb-3 px-2 flex items-center gap-2 border-b-2 cursor-pointer transition-colors whitespace-nowrap ${
+              activeTab === 'reservations' ? 'border-amber-800 text-amber-900' : 'border-transparent text-stone-500 hover:text-stone-800'
+            }`}
+          >
+            <Sparkles className="w-4 h-4 text-amber-700" />
+            <span>Plot Reservations ({reservations.length})</span>
+          </button>
+
           <button
             onClick={() => setActiveTab('inquiries')}
-            className={`pb-3 px-2 flex items-center gap-2 border-b-2 cursor-pointer transition-colors ${
-              activeTab === 'inquiries' ? 'border-teal-800 text-teal-900' : 'border-transparent text-stone-500 hover:text-stone-800'
+            className={`pb-3 px-2 flex items-center gap-2 border-b-2 cursor-pointer transition-colors whitespace-nowrap ${
+              activeTab === 'inquiries' ? 'border-amber-800 text-amber-900' : 'border-transparent text-stone-500 hover:text-stone-800'
             }`}
           >
             <Users className="w-4 h-4" />
@@ -100,8 +116,8 @@ export default function AdminPanelModal({ onClose }) {
 
           <button
             onClick={() => setActiveTab('siteVisits')}
-            className={`pb-3 px-2 flex items-center gap-2 border-b-2 cursor-pointer transition-colors ${
-              activeTab === 'siteVisits' ? 'border-teal-800 text-teal-900' : 'border-transparent text-stone-500 hover:text-stone-800'
+            className={`pb-3 px-2 flex items-center gap-2 border-b-2 cursor-pointer transition-colors whitespace-nowrap ${
+              activeTab === 'siteVisits' ? 'border-amber-800 text-amber-900' : 'border-transparent text-stone-500 hover:text-stone-800'
             }`}
           >
             <Calendar className="w-4 h-4" />
@@ -110,8 +126,8 @@ export default function AdminPanelModal({ onClose }) {
 
           <button
             onClick={() => setActiveTab('firebaseStatus')}
-            className={`pb-3 px-2 flex items-center gap-2 border-b-2 cursor-pointer transition-colors ${
-              activeTab === 'firebaseStatus' ? 'border-teal-800 text-teal-900' : 'border-transparent text-stone-500 hover:text-stone-800'
+            className={`pb-3 px-2 flex items-center gap-2 border-b-2 cursor-pointer transition-colors whitespace-nowrap ${
+              activeTab === 'firebaseStatus' ? 'border-amber-800 text-amber-900' : 'border-transparent text-stone-500 hover:text-stone-800'
             }`}
           >
             <Server className="w-4 h-4" />
@@ -128,6 +144,77 @@ export default function AdminPanelModal({ onClose }) {
             </div>
           ) : (
             <>
+              {/* Tab 0: Plot Reservations */}
+              {activeTab === 'reservations' && (
+                <div className="space-y-4">
+                  {reservations.length === 0 ? (
+                    <div className="text-center py-12 text-stone-400 text-sm">
+                      <Sparkles className="w-10 h-10 mx-auto text-amber-500/50 mb-3" />
+                      <p>No reservations placed yet. Clients reserving plots from the Reservation page will show up here live!</p>
+                    </div>
+                  ) : (
+                    reservations.map((resv) => (
+                      <div key={resv.id || resv.reservationId} className="bg-stone-50 p-4 sm:p-5 rounded-2xl border border-stone-200 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                        <div>
+                          <div className="flex items-center gap-2 mb-1">
+                            <span className="font-mono text-xs font-bold text-amber-900 bg-amber-100 px-2 py-0.5 rounded">
+                              {resv.reservationId || resv.id}
+                            </span>
+                            <h4 className="font-bold text-stone-900 text-sm">{resv.fullName || resv.name}</h4>
+                            <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
+                              resv.reservationType === 'token'
+                                ? 'bg-amber-900 text-white'
+                                : 'bg-emerald-100 text-emerald-800'
+                            }`}>
+                              {resv.reservationType === 'token' ? 'Token Hold (₹21k)' : 'Site Visit'}
+                            </span>
+                            <span className="text-[10px] font-medium text-stone-400">
+                              {resv.createdAt ? new Date(resv.createdAt).toLocaleDateString() : 'Recent'}
+                            </span>
+                          </div>
+
+                          <div className="flex flex-wrap items-center gap-4 text-xs text-stone-600 mb-2">
+                            <span className="font-semibold text-stone-900">
+                              {resv.projectTitle} • {resv.specificPlot}
+                            </span>
+                            <span className="flex items-center gap-1 font-semibold text-stone-800">
+                              <Phone className="w-3.5 h-3.5 text-emerald-600" />
+                              {resv.phone}
+                            </span>
+                            <span className="flex items-center gap-1">
+                              <Calendar className="w-3.5 h-3.5 text-stone-400" />
+                              Visit: {resv.preferredDate} ({resv.timeSlot})
+                            </span>
+                            <span className="flex items-center gap-1">
+                              <MapPin className="w-3.5 h-3.5 text-amber-600" />
+                              From: {resv.city}
+                            </span>
+                          </div>
+
+                          {resv.specialRequirements && (
+                            <p className="text-xs text-stone-500 bg-white p-2.5 rounded-xl border border-stone-200/80">
+                              "{resv.specialRequirements}"
+                            </p>
+                          )}
+                        </div>
+
+                        <div className="shrink-0 flex items-center gap-2">
+                          <a
+                            href={`https://wa.me/${resv.phone?.replace(/[^0-9]/g, '')}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="px-3.5 py-1.5 rounded-xl bg-emerald-700 hover:bg-emerald-600 text-white text-xs font-semibold flex items-center gap-1.5 transition-colors"
+                          >
+                            <Phone className="w-3 h-3" />
+                            <span>WhatsApp Client</span>
+                          </a>
+                        </div>
+                      </div>
+                    ))
+                  )}
+                </div>
+              )}
+
               {/* Tab 1: Inquiries */}
               {activeTab === 'inquiries' && (
                 <div className="space-y-4">
